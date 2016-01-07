@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="js/angular.min.js"></script>
+       <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">    
+       <link href="css/note.css" rel="stylesheet"> 
+    </head>
+    <body ng-app = "note"> 
+    <div ng-controller = "noteController as nCtrl" >
+    <div class ="notepad" > 
+    <button class = "btn btn-danger"  ng-click="nCtrl.toggle()">Create Note</button>
+    <table ng-show ="show">
+      <tr>
+          <td colspan = "2">
+              <input class = "form-control" type = "text" placeholder = "Title here..." ng-model = "myNote.title">
+           </td>
+      </tr> 
+      <tr><td colspan = "2"><textarea class = "form-control" rows = "10" cols ="50" placeholder = "Note here..." ng-model = "myNote.content" > </textarea></td></tr> 
+      <tr>
+          <td>
+             <button class = "btn btn-warning" ng-click = "addNote(myNote)" >Save</button>
+           </td>
+           <td>
+             <button class = "btn btn-success" ng-click = "nCtrl.clearNote()">Clear</button>
+          </td>
+      </tr>   
+    </table>  
+    </div>    
+    <input class = "form-control search-bar " type = "text" placeholder = " Search here..." ng-model = "searchText">
+    <div class = "notes" >
+       <ol ng-show ="myNote.title.length > 0 || myNote.content.length ? true:false"> 
+           <div class="panel panel-warning">
+                <div class="panel-heading">
+                     <h3 class="panel-title" ng-bind ="myNote.title" >{{x.title}}
+                     </h3>
+                </div>
+               <div class="panel-body" ng-bind ="myNote.content">{{x.note}} </div>
+          </div>
+       </ol>
+       
+       <ol style ="color : red"  ng-repeat = "(key, value) in notes | filter : searchText" ng-click ="editNote(key)"> 
+           <div class="panel panel-success">
+                <div class="panel-heading">
+                     <h3 class="panel-title">{{value.title}}
+                        <span ng-click ="deleteNote(key, value.id)" class = "cross glyphicon glyphicon-remove"> </span>
+                     </h3>
+                </div>
+               <div class="panel-body">{{value.content}} </div>
+          </div>
+       </ol>
+    </div>
+    </div>
+    </body>
+    <script src="js/note.js"> </script>
+</html>
