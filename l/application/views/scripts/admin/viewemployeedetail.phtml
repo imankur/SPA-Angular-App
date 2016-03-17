@@ -1,0 +1,188 @@
+<?php
+$userSkillDetail = $this->user->getUserSkillDetail();
+$photoUrl = '/images/userLogin2.png';
+?>
+	<div class="headTitle">
+	    <h1 class="headbrd">Profile Details</h1>
+	</div>
+	<div class="profilehead">
+		<div class="profileimg fleft">
+			<p>
+				<img src="<?=$photoUrl?>" width="60" height="60" alt=" " />
+				<?=$this->user->getFirstName()." ".$this->user->getLastName();?>
+			</p>
+		</div>
+	</div>
+
+	<div class="contactDetails col_7">
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo in_array('empId', $this->changedField['contactDetails']) ? 'edited' : ''; } ?>"><label class="span2">Employee Id</label> : <?=($this->user->getEmpId()==null) ? 'Not Specified' : $this->user->getEmpId();?></p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo in_array('tel', $this->changedField['contactDetails']) ? 'edited' : ''; } ?>"><label class="span2">Contact No</label> : <?=($this->user->getPhoneNumber()==0) ? 'Not Specified' : $this->user->getPhoneNumber();?></p>
+		<p><label class="span2">Email</label> : <?=$this->user->getEmail();?></p>
+	</div>
+
+	<div class="workDetails">
+		<p class="<?php  if(isset($this->changedField['contactDetails'])){ echo in_array('totalYears', $this->changedField['contactDetails']) || in_array('totalMonths', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Work Experience</label>
+			:
+				<?php if(count($this->user->getUserDetail())>0){?>
+					<?=$this->user->getUserDetail()->getExpYears()." Year(s) ". $this->user->getUserDetail()->getExpMonths()." Month(s)";?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('position', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Designation</label>
+			:
+				<?php if(count($this->user->getUserDetail())>0){?>
+				<?=$this->user->getUserDetail()->getPosition()->getPosition();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('mainTechnology', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Main Technology</label>
+			:
+				<?php if(count($this->user->getUserDetail())>0 && count($this->user->getUserDetail()->getMainTechnology())>0){?>
+				<?=$this->user->getUserDetail()->getMainTechnology()->getTechnology();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('careerStarted', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Overall Career Started</label>
+			:
+				<?php if(count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getCareerStarted())>0){?>
+				<?=$this->user->getUserDetail()->getCareerStarted()->format('Y-m-d');?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('careerSynergy', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Career Started in Synergy</label>
+			:
+				<?php if(count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getCareerSynergy())>0){?>
+				<?=$this->user->getUserDetail()->getCareerSynergy()->format('Y-m-d');?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<br>
+		<b>Present Address </b>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('presentaddress', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Address</label>
+			:
+				<?php if( count($this->user->getUserDetail())>0  &&  count($this->user->getUserDetail()->getPresentAddress())>0){?>
+				<?=$this->user->getUserDetail()->getPresentAddress()?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('presentcity', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">City</label>
+			:
+				<?php if( count($this->user->getUserDetail())>0  &&  count($this->user->getUserDetail()->getPresentCity())>0){?>
+				<?=$this->user->getUserDetail()->getPresentCity();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('presentstate', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">State</label>
+			:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPresentState())>0){?>
+				<?=$this->user->getUserDetail()->getPresentState()->getState();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('presentpincode', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Pincode</label>
+			:
+				<?php if( count($this->user->getUserDetail())>0  &&  count($this->user->getUserDetail()->getPresentPincode())>0){?>
+				<?=$this->user->getUserDetail()->getPresentPincode();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<b>Permanent Address </b>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('permanentaddress', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Address</label>
+			:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPermanentAddress())>0){?>
+				<?=$this->user->getUserDetail()->getPermanentAddress();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('permanentcity', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">City</label>
+			:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPermanentCity())>0){?>
+				<?=$this->user->getUserDetail()->getPermanentCity();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('permanentstate', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">State</label>
+			:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPermanentState())>0){?>
+				<?=$this->user->getUserDetail()->getPermanentState()->getState();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<p class="<?php if(isset($this->changedField['contactDetails'])){ echo  in_array('permanentpincode', $this->changedField['contactDetails']) ? 'edited' : ''; }?>">
+			<label class="span2 nomarginleft">Pincode</label>
+			:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPermanentPincode())>0){?>
+				<?=$this->user->getUserDetail()->getPermanentPincode();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+		</p>
+		<div style="clear:both;"></div>
+	</div>
+	 <table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+       <thead>
+       <tr>
+         <td class="lightgray" width="15%"><label>Skill name</label></td>
+         <td class="lightgray" width="15%"><label>Last used</label></td>
+         <td class="lightgray" width="13%"><label>Skill level</label></td>
+         <td class="lightgray" width="17%"><label>Experience (Months)</label></td>
+         <td class="lightgray" width="30%"><label>Projects</label></td>
+         <td class="lightgray" width="10%"><label>Verified</label></td>
+       </tr>
+       </thead>
+       <tbody>
+       	<?php
+		if(count($userSkillDetail)>0){
+			foreach($userSkillDetail as $userSkill){?>
+          <tr class="<?= in_array($userSkill->getUserSkillsDetailId(), $this->changedField['skill']) && $userSkill->getIsVerified()!=1 ? 'edited' : ''; ?>">
+          	<td class="txtcenter"><?=$userSkill->getSkill()->getSkillName();?></td>
+            <td class="txtcenter"><?=$userSkill->getLastUsedMonth()." ".$userSkill->getLastUsedYear();?></td>
+            <td class="txtcenter"><?=$userSkill->getLevel()->getLevelName();?></td>
+            <td class="txtcenter"><?=$userSkill->getExpMonths();?></td>
+            <td class="txtcenter">
+            	<?php $prjctDtlArr = array();
+					foreach ($userSkill->getProjectDetail() as $projectDetails){
+						$prjctDtlArr[] = $projectDetails->getProject()->getProjectName();
+					}
+					echo implode(', ', $prjctDtlArr);
+				?>
+            </td>
+            <td class="txtcenter"><img src="<?php echo $userSkill->getIsVerified() ? '/images/green_check.png' : '/images/restricted.png';?>"/></td>
+          </tr>
+          <?php }
+		}else{?>
+			 <tr class="">
+              <td class="profileaside" colspan="6">
+                <p align="center" class="noskill">No Skills added yet</p>
+				<!-- <p align="center"><a href="/user/updateskill/userId/<?=$this->user->getUserId()?>">Manage Your Skills<span class="displayblock"><img src="/images/manage-plus.png"/></span></a></p> -->
+               </td>
+             </tr>
+
+		<?php }?>
+       </tbody>
+     </table>
+    <div class="clear"></div>

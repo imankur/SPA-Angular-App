@@ -1,0 +1,25 @@
+[21-Jun-2012 15:28:13] PHP Fatal error:  Class 'Doctrine\Common\ClassLoader' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 7
+[21-Jun-2012 15:30:16] PHP Fatal error:  Class 'Doctrine\Common\ClassLoader' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 7
+[21-Jun-2012 15:31:37] PHP Fatal error:  Class 'Doctrine\Common\ClassLoader' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 7
+[21-Jun-2012 15:32:13] PHP Fatal error:  Class 'Doctrine\Common\ClassLoader' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 7
+[21-Jun-2012 15:33:24] PHP Fatal error:  Class 'Doctrine\ORM\Configuration' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 15
+[21-Jun-2012 15:34:37] PHP Fatal error:  Class 'Doctrine\Common\ClassLoader' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 7
+[21-Jun-2012 15:36:31] PHP Fatal error:  Class 'Doctrine\Common\ClassLoader' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 7
+[21-Jun-2012 15:38:32] PHP Warning:  require_once(../../library/Doctrine/Symfony/Components/Console/Helper/HelperSet.php): failed to open stream: No such file or directory in E:\projects\php\resource_management\application\tools\doctrine.php on line 20
+[21-Jun-2012 15:38:32] PHP Fatal error:  require_once(): Failed opening required '../../library/Doctrine/Symfony/Components/Console/Helper/HelperSet.php' (include_path='.;D:\php-5.3.3\pear') in E:\projects\php\resource_management\application\tools\doctrine.php on line 20
+[21-Jun-2012 15:40:35] PHP Warning:  require_once(../../library/Doctrine/Symfony/Components/Console/Helper/HelperSet.php): failed to open stream: No such file or directory in E:\projects\php\resource_management\application\tools\doctrine.php on line 20
+[21-Jun-2012 15:40:35] PHP Fatal error:  require_once(): Failed opening required '../../library/Doctrine/Symfony/Components/Console/Helper/HelperSet.php' (include_path='.;D:\php-5.3.3\pear') in E:\projects\php\resource_management\application\tools\doctrine.php on line 20
+[21-Jun-2012 15:40:47] PHP Warning:  require_once(../../library/Doctrine/Symfony/Components/Console/Helper/HelperSet.php): failed to open stream: No such file or directory in E:\projects\php\resource_management\application\tools\doctrine.php on line 20
+[21-Jun-2012 15:40:47] PHP Fatal error:  require_once(): Failed opening required '../../library/Doctrine/Symfony/Components/Console/Helper/HelperSet.php' (include_path='.;D:\php-5.3.3\pear') in E:\projects\php\resource_management\application\tools\doctrine.php on line 20
+[21-Jun-2012 15:41:33] PHP Fatal error:  Class 'Doctrine\ORM\Configuration' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 15
+[21-Jun-2012 15:44:34] PHP Fatal error:  Class 'Doctrine\ORM\Configuration' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 16
+[21-Jun-2012 15:45:55] PHP Fatal error:  Class 'Doctrine\DBAL\Configuration' not found in E:\projects\php\resource_management\library\Doctrine\ORM\Configuration.php on line 43
+[21-Jun-2012 15:46:45] PHP Fatal error:  Class 'Doctrine\ORM\Configuration' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 15
+[21-Jun-2012 15:47:26] PHP Fatal error:  Cannot redeclare class Doctrine\Common\ClassLoader in D:\php-5.3.3\PEAR\Doctrine\Common\ClassLoader.php on line 35
+[21-Jun-2012 15:49:03] PHP Fatal error:  Class 'Doctrine\Common\ClassLoader' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 6
+[21-Jun-2012 15:49:11] PHP Warning:  require(\Symfony\Components\Console\Helper\HelperSet.php): failed to open stream: No such file or directory in E:\projects\php\resource_management\library\Doctrine\Common\ClassLoader.php on line 164
+[21-Jun-2012 15:49:11] PHP Fatal error:  require(): Failed opening required '\Symfony\Components\Console\Helper\HelperSet.php' (include_path='.;D:\php-5.3.3\pear') in E:\projects\php\resource_management\library\Doctrine\Common\ClassLoader.php on line 164
+[21-Jun-2012 15:49:43] PHP Fatal error:  Class 'Doctrine\ORM\Configuration' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 15
+[21-Jun-2012 15:50:07] PHP Fatal error:  Class 'Doctrine\ORM\Configuration' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 15
+[21-Jun-2012 15:51:58] PHP Fatal error:  Class 'Doctrine\ORM\Configuration' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 15
+[21-Jun-2012 16:18:10] PHP Fatal error:  Class 'Doctrine\ORM\Configuration' not found in E:\projects\php\resource_management\application\tools\cli-config.php on line 15

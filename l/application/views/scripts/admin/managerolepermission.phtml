@@ -1,0 +1,52 @@
+<script>
+$(document).ready(function() {
+<?php if($this->msg !='') {?>
+	$("#msg").html("<?php echo $this->msg; ?>");
+	<?php } ?>
+});
+
+
+</script>
+<div class="headTitle">
+	    <h1 class="headbrd">Manage Role Permissions</h1>
+	    <div class="profileimg col_6 fleft">
+	    	<p id="msg" style="color:#54C571;"></p>
+	    </div>
+</div>
+<p class=" profileaside inlineList txtright">
+<!-- <a href="/admin/manageuserrole">Manage User Roles</a> -->
+<a href="/admin/addrole">Add New Role</a>
+<span>|</span>
+<a href="/admin/manageuserrole">Manage User Roles</a>
+</p>
+<table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+	<thead>
+		<tr>
+			<td class=" profileaside txtleft" width="12%"><label>Role</label></td>
+			<td class=" profileaside" width="73%"><label>Permissions</label></td>
+			<td class=" profileaside" width="15%"><label>Edit Permission</label></td>
+			<!-- <td class=" profileaside" width="15%"><label>Experience (Months)</label></td>
+			<td class=" profileaside" width="35%"><label>Project</label></td>
+			<td class=" profileaside" width="5%"><label>Verified</label></td> -->
+		</tr>
+	</thead>
+	<tbody>
+		<?php $count = 1;
+		foreach ($this->rolePermission as $roleName => $rolePermission){
+			$keyArr = explode(':', $roleName);
+		?>
+			<tr>
+				<td class="span2 profileaside txtleft"><?=$count++ ." - ".trim($keyArr[0]);?></td>
+            	<td class="span2 profileaside txtleft">
+	            	<?php foreach ($rolePermission as $key => $role){?>
+                     <dl class="datalist-1">
+	            		<dt> Resource </dt> <dd> <?=$key?></dd>
+	            		<dt> Privilages </dt> <dd> <?=implode(', ', $role)?></dd>
+                     </dl>
+	            	<?php }?>
+            	</td>
+            	<td class="span2 profileaside txtcenter"><a href="/admin/editrolepermission/roleId/<?=$keyArr[1];?>">Edit Permission</a></td>
+			</tr>
+		<?php }?>
+	</tbody>
+</table>

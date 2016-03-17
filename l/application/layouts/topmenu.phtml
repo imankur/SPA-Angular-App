@@ -1,0 +1,112 @@
+ <div class="wrapheader">
+   <div class="headerbottom">
+     <div class="row main">
+     	<div class="customlogo">
+        	<a href="/"><img src="/images/logo_site3.jpg" alt=" " />
+        		Synergy Technology Services
+        	</a>
+       	</div>
+       <div class="nav">
+       <?php
+	       $userSessionData = new Zend_Session_Namespace('resourceManagement');
+	       $this->userName = $userSessionData->userName;
+	       $this->firstName = $userSessionData->firstName;
+	       $this->lastName = $userSessionData->lastName;
+	       $requestUri = explode("/",$_SERVER['REQUEST_URI']);
+	       $requertAction=isset($requestUri[2])?$requestUri[2]:'index'
+	    ?>
+
+         <ul>
+         <?php
+         if(isset($this->userName)){
+         	$privilage= array();
+          foreach ($_SESSION['userMenu'] as $userMenu){
+          		$privilage[]=$userMenu['privilage'];
+      		 }
+      		 ?>
+      		<?php if(in_array('index',$privilage)){?>
+			<li><a href="/admin/index" class="<?php echo (!isset($requestUri[2]) || in_array("index", $requestUri))? 'active':'';?>">Home</a></li><li>
+			<?php } if(in_array('myprofile',$privilage) || in_array('viewdetails',$privilage) || in_array('updateprofile',$privilage) || in_array('updateskill',$privilage)){?>
+			<li class="dropdown" ><a href="#" class="<?php echo (in_array("myprofile", $requestUri)|| in_array("viewdetails", $requestUri) || in_array("updateprofile", $requestUri) || in_array('updateskill',$requestUri))? 'active':'';?>">Profile<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+						<?php if(in_array('myprofile',$privilage)){?>
+						 <li><a href="/admin/myprofile" class="<?php echo in_array("myprofile", $requestUri)  ? 'active':'';?>">My Profile</a></li>
+						 <?php } if(in_array('viewdetails',$privilage)){?>
+						 <li><a href="/user/viewdetails" class="<?php echo in_array("viewdetails", $requestUri)  ? 'active':'';?>">View Details</a></li>
+						 <?php } if(in_array('updateprofile',$privilage)){?>
+						 <li><a href="/user/updateprofile" class="<?php echo in_array("updateprofile", $requestUri)  ? 'active':'';?>">Edit Profile</a></li>
+						 <?php } if(in_array('updateskill',$privilage)){ ?>
+						 <li><a href="/user/updateskill" class="<?php echo in_array("updateskill", $requestUri)? 'active':'';?>">Edit Skill</a></li>
+						 <?php }?>
+				  </ul>
+		       </li>
+		       <?php }?>
+		        <?php if(in_array('viewstats',$privilage) || in_array('viewtechstatus',$privilage) || in_array('getusersprofilestatus',$privilage) ){?>
+			<li class="dropdown" ><a href="#" class="<?php echo (in_array("viewstats", $requestUri) || in_array("viewtechstatus", $requestUri))? 'active':'';?>">Search<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+						<?php if(in_array('viewstats',$privilage)){?>
+						 <li><a href="/admin/viewstats" class="<?php echo in_array("viewstats", $requestUri)  ? 'active':'';?>">Search by skills</a></li>
+						 <?php } if(in_array('viewtechstatus',$privilage)){?>
+						 <li><a href="/admin/viewtechstatus" class="<?php echo in_array("viewtechstatus", $requestUri)  ? 'active':'';?>">Search by Main Technology</a></li>
+						 <?php } if(in_array('getusersprofilestatus',$privilage)){ ?>
+						 <li><a href="/admin/getusersprofilestatus" class="<?php echo in_array("getusersprofilestatus", $requestUri)  ? 'active':'';?>">Users Profile Status</a></li>
+						 <?php } ?>
+				  </ul>
+		       </li>
+		       <?php  }?>
+			<?php if(in_array('managerolepermission',$privilage) || in_array('manageusers',$privilage) || in_array('manageteam',$privilage)){?>
+			<li class="dropdown" ><a href="#" class="<?php echo (in_array("manageteam", $requestUri)|| in_array("manageusers", $requestUri) || in_array("managerolepermission", $requestUri))? 'active':'';?>">Manage<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+						<?php if(in_array('managerolepermission',$privilage)){?>
+						 <li><a href="/admin/managerolepermission" class="<?php echo in_array("managerolepermission", $requestUri)  ? 'active':'';?>">Manage Role Permission</a></li>
+						 <?php } if(in_array('manageusers',$privilage)) {?>
+						 <li><a href="/admin/manageusers" class="<?php echo in_array("manageusers", $requestUri)  ? 'active':'';?>">Manage Users</a></li>
+						 <?php } if(in_array('manageteam',$privilage)) { ?>
+						 <li><a href="/admin/manageteam" class="<?php echo in_array("manageteam", $requestUri)  ? 'active':'';?>">Manage Team</a></li>
+						 <?php } ?>
+				  </ul>
+		       </li>
+		       <?php  }?>
+		       <?php if(in_array('allreport',$privilage) || in_array('report',$privilage) || in_array('searchbydates',$privilage)){?>
+			<li class="dropdown" ><a href="#" class="<?php echo (in_array("allreport", $requestUri) || in_array("report", $requestUri))? 'active':'';?>">Reports<b class="caret"></b></a>
+				<ul class="dropdown-menu">
+						<?php if(in_array('searchbydates',$privilage)){?>
+						 <li><a href="/admin/searchbydates" class="<?php echo in_array("searchbydates", $requestUri)  ? 'active':'';?>">Search By Dates</a></li>
+						 <?php } if(in_array('allreport',$privilage)){?>
+						 <li><a href="/admin/allreport" class="<?php echo in_array("allreport", $requestUri)  ? 'active':'';?>">Daily IN-OUT </a></li>
+						 <?php } if(in_array('report',$privilage)){?>
+						 <li><a href="/user/report" class="<?php echo in_array("report", $requestUri)  ? 'active':'';?>">My Reports</a></li>
+						 <?php }?>
+				  </ul>
+		       </li>
+		       <?php  }?>
+		        <?php if(in_array('addtimesheet',$privilage) || in_array('assignproject',$privilage) || in_array('viewtimesheet',$privilage) || in_array('viewalltimesheet',$privilage)){?>
+		        <li class="dropdown" ><a href="#" class="<?php echo (in_array('timesheet',$requestUri))? 'active':'';?>">Time Sheet<b class="caret"></b></a>
+		        <ul class="dropdown-menu">
+		       			 <?php if(in_array('addtimesheet',$privilage)){?>
+						 <li><a href="/timesheet/#addtimesheet" onclick="">Add Time Sheet</a></li>
+						 <?php }if(in_array('viewtimesheet',$privilage)){?>
+						 <li><a href="/timesheet/#viewtimesheet" class="<?php echo in_array("#viewtimesheet", $requestUri)  ? 'active':'';?>">View Timesheet</a></li>
+						 <?php }if(in_array('viewalltimesheet',$privilage)){?>
+						 <li><a href="/timesheet/#viewalltimesheet" class="<?php echo in_array("#viewalltimesheet", $requestUri)  ? 'active':'';?>">View All Timesheet</a></li>
+						 <?php }if(in_array('assignproject',$privilage)){?>
+						 <li><a href="/timesheet/#assignproject" class="<?php echo in_array("#assignproject", $requestUri)  ? 'active':'';?>">Assign Project</a></li>
+						 <?php }?>
+		        </ul>
+		        </li>
+		        <?php }?>
+          <?php } ?>
+         </ul>
+       </div>
+       <div class="connect">
+	       <?php if(isset($this->userName)){?>
+	        	<span class="status">Hi, <?=$this->firstName?></span>
+	        	<a href="/login/logout" class="btn small logstatusbtn logout"><span class="image"></span><span class="log">Logout</span></a>
+	       <?php }else{?>
+	       		<a href="/login/login" class="btn small logstatusbtn login"><span class="image"></span><span class="log">Login</span></a>
+	       <?php }?>
+       </div>
+       <div class="clear"></div>
+     </div>
+   </div>
+ </div>

@@ -1,0 +1,1 @@
+ALTER TABLE `resource_management`.`users` MODIFY COLUMN `is_admin` BIGINT(20) UNSIGNED DEFAULT 0;

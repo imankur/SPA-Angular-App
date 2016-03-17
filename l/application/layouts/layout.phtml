@@ -1,0 +1,64 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+	<head>
+		<title>Synergy Resource Management</title>
+		<link id="page_favicon" href="/images/favicon.ico" rel="icon" type="image/x-icon" />
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<meta name="description" content="Synergy Resource Management">
+		<meta name="keywords" content="Synergy Resource Management">
+	    <link rel="shortcut icon" href="favicon.ico">
+
+		<script src="/scripts/jquery-1.6.2.min.js"></script>
+		<script src="/scripts/jquery-ui.js"></script>
+		<script src="/scripts/jquery-ui-1.8.15.custom.min.js"></script>
+		<script src="/scripts/jquery.json-2.2.min.js"></script>
+
+		<script src="/scripts/common.js"></script>
+		<script src="/scripts/jquery.history.js"></script>
+		<script src="/scripts/jquery.intervals.js"></script>
+		<script src="/scripts/manager-default.js"></script>
+		<script type="text/javascript" src="/scripts/custom.js"></script>
+		<script type="text/javascript" src="/scripts/jquery.nivo.slider.js"></script>
+		<script type="text/javascript" src="/scripts/jquery.qtip-1.0.0-rc3.min.js"></script>
+		<script src="/scripts/select2.js"></script>
+
+	   	<!-- <link rel="stylesheet" href="/styles/style.css" type="text/css" />  -->
+	   	<link type="text/css" rel="stylesheet" href="/styles/nivoslider.css" />
+	   	<link type="text/css" rel="stylesheet" href="/styles/bootstrap.css" />
+        <link type="text/css" rel="stylesheet" href="/styles/reset.css" />
+		<link type="text/css" rel="stylesheet" href="/styles/template.css" />
+		<link type="text/css" rel="stylesheet" href="/styles/Report.css" />
+		<link type="text/css" rel="stylesheet" href="/styles/select2.css" />
+		<link href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" rel="stylesheet"/>
+
+
+	    <script>
+		/*	$('#username').focus();
+			$('#login p a').live('click',function(){
+				$('#login a').removeClass();
+				$(this).addClass('active');
+			});
+			  $(window).load(function() {
+			        $('#slider').nivoSlider();
+			    });*/
+		</script>
+	</head>
+	<body>
+       <div class="mainwrapper">
+
+			<?php echo $this->render('topmenu.phtml') ?>
+
+			<div class="wrapcontainer">
+				<div class="main" id="ajaxContent">
+					<div class="content" >
+						<?=$this->layout()->content; ?>
+					</div>
+				</div>
+ 			</div>
+			<div class="clear"></div>
+		</div>
+		<?php echo $this->render('footer.phtml') ?>
+	</body>
+</html>

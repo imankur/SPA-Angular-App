@@ -1,0 +1,230 @@
+<?php
+if($this->user !=null){
+$userSkillDetail = $this->user->getUserSkillDetail();
+?>
+<script type="text/javascript">
+
+
+$("#selectAll").live('click',function () {
+    $('.check').attr('checked', this.checked);
+    if($(this).parent().hasClass('checked'))
+		$(this).parent().removeClass('checked');
+	else{
+		$(this).parent().addClass('checked');
+	}
+
+    if($(this).parent().hasClass('checked'))
+		$('.check').parent().addClass('checked');
+	else
+		$('.check').parent().removeClass('checked');
+});
+
+$(".check").live('click',function(){
+	 if($(".check").length == $(".check:checked").length) {
+	        $("#selectAll").attr("checked", "checked");
+	        $("#selectAll").parent().addClass('checked');
+	    } else {
+	        $("#selectAll").removeAttr("checked");
+	        $("#selectAll").parent().removeClass('checked');
+	    }
+	if($(this).parent().hasClass('checked')){
+		$(this).parent().removeClass('checked');
+		$(this).removeAttr("checked");
+	}
+	else{
+		$(this).attr("checked", "checked");
+		$(this).parent().addClass('checked');
+	}
+});
+
+$(document).ready(function() {
+	$(".dTable tbody tr:nth-child(2n)").addClass("even");
+});
+
+$('.verifySkill').live('click',function(){
+	var skillId = $(this).attr('id').replace('verifySkill_','');
+	$(this).hide();
+	$('#loader_'+skillId).show();
+	$.ajax({
+ 		type : 'POST',
+ 		url: '/admin/approveuseractivities',
+    	data: "format=json&skillId="+$.toJSON(skillId),
+    	success: function(res, stat) {
+    		$('#verifySkill_'+skillId).show();
+    		if($('#verifySkill_'+skillId).hasClass('btn-success')){
+    			$('#verifySkill_'+skillId).removeClass('btn-success');
+        		$('#verifySkill_'+skillId).addClass('btn-danger');
+        		$('#verifySkill_'+skillId).html('Reject');
+    		}else{
+    			$('#verifySkill_'+skillId).removeClass('btn-danger');
+        		$('#verifySkill_'+skillId).addClass('btn-success');
+        		$('#verifySkill_'+skillId).html('Approve');
+    		}
+    		$('#loader_'+skillId).hide();
+    	}
+	});
+});
+
+$('#Approve').live('click',function(){
+	$("#msg").html("");
+	var skillId=new Array();
+	if($('.check:checked').size()==0){
+		$("#msg").css("color","#A52A2A");
+		$("#msg").html("Please select at least one checkbox");
+	}else{
+
+	$('.check:checked').each(function(id,checked){
+		 skillId[id]=$(checked).val();
+		});
+	$.ajax({
+ 		type : 'POST',
+ 		url: '/admin/approveuseractivities',
+    	data: "format=json&skillId="+$.toJSON(skillId)+"&status=Approve",
+    	success: function(res, stat) {
+    		$('.check:checked').each(function(id,checked){
+        		var id=$(checked).val();
+   			 	$('#'+id).html('Approved');
+   			});
+    		$("#selectAll").parent().removeClass('checked');
+    		$('#selectAll').removeAttr('checked');
+    		$(".check").parent().removeClass('checked');
+   		 	$('.check').removeAttr('checked');
+    		$("#msg").css("color","#54C571");
+    		$("#msg").html("Skills Approved");
+    	}
+	});
+	}
+
+});
+$('#Reject').live('click',function(){
+	$("#msg").html("");
+	var skillId=new Array();
+	if($('.check:checked').size()==0){
+		$("#msg").css("color","#A52A2A");
+		$("#msg").html("Please select at least one checkbox");
+	}
+	else{
+	$('.check:checked').each(function(id,checked){
+		 skillId[id]=$(checked).val();
+		});
+	$.ajax({
+ 		type : 'POST',
+ 		url: '/admin/approveuseractivities',
+    	data: "format=json&skillId="+$.toJSON(skillId)+"&status=Reject",
+    	success: function(res, stat) {
+    		$('.check:checked').each(function(id,checked){
+        		var id=$(checked).val();
+   			 	$('#'+id).html('Rejected');
+   			});
+    		$("#selectAll").parent().removeClass('checked');
+    		$('#selectAll').removeAttr('checked');
+    		$(".check").parent().removeClass('checked');
+   			$('.check').removeAttr('checked');
+    		$("#msg").css("color","#A52A2A");
+    		$("#msg").html("Skills Rejected");
+    	}
+	});
+	}
+});
+
+</script>
+<div class="headTitle">
+	    <h1 class="headbrd">Employee Activity</h1>
+</div>
+<div class="profilehead">
+
+	<div class="profileimg col_6 fleft">
+	<p id="msg" style="color:#54C571;"></p>
+		<p>
+			<img src="/images/userLogin2.png" width="60" height="60" alt=" " />
+				<?=$this->user->getFirstName()." ".$this->user->getLastName();?>
+		</p>
+	</div>
+</div>
+<div class="row show-grid">
+	<div class="span12 GridPanel">
+        <h2 class="headbrd gray">
+        Skills
+		</h2>
+        <div class="">
+        	<table cellspacing="0" cellpadding="0" border="0" id="dynamic" class="dTable dataTable" aria-describedby="dynamic_info">
+        		<thead>
+        		 <?php
+						if(count($userSkillDetail)>0){?>
+			    	<tr role="row">
+			        	<th class="span2">Skill<span style="display: block;" class="sorting"></span></th>
+				        <th class="span1">Level</th>
+				        <th class="span2">Experience</th>
+				        <th class="span9">Projects</th>
+				        <th class="span1">Status</th>
+                        <th>
+                        <div class="checker">
+                                	 <span class="">
+                                	 <input type="checkbox" name="check[]"  id="selectAll">
+                                	 </span>
+                        </div>
+                        </th>
+				    </tr>
+				</thead>
+		        <tbody role="alert" aria-live="polite" aria-relevant="all">
+		           	 <?php
+							foreach($userSkillDetail as $userSkill){?>
+			            	<tr class="gradeA" id="row">
+			            	   <td><?=$userSkill->getSkill()->getSkillName();?></td>
+                               <td class="txtcenter"><?=$userSkill->getLevel()->getLevelName();?></td>
+                               <td class="txtcenter"><?=$userSkill->getExpMonths();?></td>
+                               <td><p><?php $prjctDtlArr = array();
+									foreach ($userSkill->getProjectDetail() as $projectDetails){
+										$prjctDtlArr[] = $projectDetails->getProject()->getProjectName();
+									}
+									echo implode(', ', $prjctDtlArr);
+									?></p></td>
+                                <td class="txtcenter" id='<?=$userSkill->getUserSkillsDetailId();?>'><?php
+	                                if($userSkill->getIsVerified()==1){
+	                                	echo "Rejected";
+	                                }else if($userSkill->getIsVerified()==2)
+	                                	echo "Approved";
+	                                else
+	                                	echo '-';
+                                ?>
+                                </td>
+                               	<td class="center" style="width:80px">
+                                 <div class="checker">
+                                	 <span class=""> <!-- 	<?=$userSkill->getIsVerified() ? 'checked' : ''?> -->
+                                	 <input type="checkbox" name="checkRow[]" value="<?= $userSkill->getUserSkillsDetailId();?>" id="check_<?= $userSkill->getUserSkillsDetailId();?>" class="check">
+                                	 </span>
+                                 </div>
+                                 </td>
+			            	</tr>
+			            	<?php }
+							?>
+				</tbody>
+				<?php } else {?>
+				<tr>
+					<td>No Skills Found</td>
+				</tr>
+				<?php }?>
+			</table>
+         </div>
+	</div>
+</div>
+	 <p align="right">
+	 		<?php if($this->inloop){?>
+         	<a class="btn btn-small" href="/admin/employeeactivity">Next</a>
+			<?php } if(count($userSkillDetail)>0){?>
+	        <input class="btn btn-success btn-small " type="button" id="Approve" value="Approve">
+			<input class="btn btn-danger  btn-small " type="button" id="Reject" value="Reject">
+			<?php if(!$this->inloop){?>
+			<a class="defaultManage btn btn-primary btn-small" href="/admin/manageusers">Done</a>
+			<?php } }?>
+
+         </p>
+
+<div class="clear"></div>
+<?php } else {?>
+<div class="profileimg col_6 fleft">
+		<p>
+				You do not have permission to access this page
+		</p>
+	</div>
+ <?php }?>

@@ -1,0 +1,156 @@
+<link rel="stylesheet" href="/styles/shadowbox.css" type="text/css"
+	media="screen" title="no title" charset="utf-8">
+<script src="/scripts/modalwindow/shadowbox.js" type="text/javascript"
+	charset="utf-8"></script>
+<?php if($this->TimeDetails != "accessdenied"){?>
+<script type="text/javascript">
+	function SBopen() {
+	    document.body.style.overflow = "hidden";
+	    document.body.style.padding = "0 17px 0 0";
+	    document.getElementById("sb-container").style.position = "fixed";
+	}
+	function SBclose() {
+	    document.body.style.overflow = "auto";
+	    document.body.style.padding = "0";
+	}
+	Shadowbox.init({
+	    onOpen: SBopen,
+	    onClose: SBclose
+	});
+	$( document ).ready(function() {
+		var load_img='<img src="/images/loading1.gif" style="display: block;margin: auto; "></img>';
+		var months=new Array();
+		months[1]="January";
+		months[2]="February";
+		months[3]="March";
+		months[4]="April";
+		months[5]="May";
+		months[6]="June";
+		months[7]="July";
+		months[8]="August";
+		months[9]="September";
+		months[10]="October";
+		months[11]="November";
+		months[12]="December";
+		var Month=<?php echo $this->Month;?>;
+		var Year=<?php echo $this->Year;?>;
+		var currMonth= new Date().getMonth()+1;
+		var currYear= new Date().getFullYear();
+		document.getElementById("Month").innerHTML=months[Month]+", "+Year;
+		if((Month==currMonth) && ( Year==currYear) ){
+			document.getElementById('nxt').style.color = 'black';
+			document.getElementById('nxt').onclick="return false;";
+		}
+		else{
+			$('#nxt').click(function (event) {
+				$("#content").html(load_img);
+				if(Month==12){
+					Year=Year+1;
+					Month=1;
+				}
+				else
+				Month= Month+1;
+				setTimeout(function() {
+					window.location.href = "/admin/viewbyuser?Month=" + Month+"&Year="+Year+"&userId="+<?php echo $this->userId; ?>;
+					}, 10);
+			   });
+		}
+
+		$('#prev').click(function (event) {
+			$("#content").html(load_img);
+			if(Month==1){
+				Year=Year-1;
+				Month= 12;
+			}
+			else
+				Month= Month-1;
+			setTimeout(function() {
+				window.location.href = "/admin/viewbyuser?Month=" + Month+"&Year="+Year+"&userId="+<?php echo $this->userId; ?>;
+				}, 10);
+
+		   });
+
+		 $("#content a.sortNWH").live('click',function(){
+			 window.location.href = "/admin/viewbyuser?Month=" + Month+"&Year="+Year+"&userId="+<?php echo $this->userId; ?>+"&sort_by=NWH";
+       	 });
+
+		$('#export').click(function() {
+			window.location.href='/admin/getcsvfile?Month=' + Month+"&Year="+Year+"&userId="+<?php echo $this->userId; ?>;
+		});
+	});
+</script>
+
+<div class="lead"><?php echo $this->uName;?>
+<?php if(!empty($this->TimeDetails)){?>
+	<div class="pull-right">
+		<button id="export" class="btn btn-default"
+			style="margin: 0 0 0px 20px;" type="button" >Export
+			</button>
+	</div>
+	<?php } ?>
+</div>
+
+<div class="SwitchControl">
+	<a class="prev" id="prev" href="#"> &lt Previous</a> <a class="center"
+		id="Month"></a> <a class="nxt" id="nxt" href="javascript:void(0)"> Next ></a>
+</div>
+
+<div class="content-main" id="content">
+<?php if(empty($this->TimeDetails)) { ?>
+<div>No Entries found for <?php echo date('F',mktime(0, 0, 0, $this->Month)) ; ?> Month </div>
+<?php } else{ ?>
+<table class="table">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Day</th>
+				<th>First Event</th>
+				<th>Last Event</th>
+				<th>No.of Entry</th>
+				<th>No. of Exits</th>
+				<th>Total Working hours</th>
+				<th>Time out of office</th>
+				<th><a class="sortNWH" href="#">Net working hours</a><i  class="icon-arrow-<?php echo $this->NWH_sort_order=='ASC'?'up':'down'; ?>"></i></th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach($this->TimeDetails as $row){
+		?>
+		<tr
+				<?php if(($row['Net Working Hours']<'08:00:00') && !isset($row['Holiday']))  echo "style='background-color:#C67171;color:#ffffff;'" ?>>
+				<td><?php echo date('d/m/Y',strtotime($row['Date']));?></td>
+				<td><?php echo $row['Day']?></td>
+				<?php if(isset($row['Holiday'])){?>
+					<td colspan='8'><h6 align="center"><?php echo $row['Holiday']?></h6></td>
+				<?php }else{?>
+					<td><?php echo $row['First Event']?></td>
+					<td><?php echo $row['Last Event']?></td>
+					<td><?php echo $row['Entry']?></td>
+					<td><?php echo $row['Exit']?></td>
+					<td><?php echo $row['Total Time']?></td>
+					<td><?php echo $row['Total Time Out']?></td>
+					<td><?php echo $row['Net Working Hours']?></td>
+					<td><a
+					rel="<?php echo ($row['Entry']==='-')? "":"shadowbox;height=450;width=900"?>"
+					<?php echo $row['Net Working Hours']<'08:00:00'?'style="color:#ffffff;"':''; ?>
+					href="<?php echo ($row['Entry']==='-')?"javascript:void(0)" :"/user/reportdetail/?userId=".$this->userId."&Date=".date('d/m/Y',strtotime($row['Date'])); ?>">Details</a></td>
+				<?php }?>
+			</tr>
+		<?php } ?>
+	</tbody>
+	</table>
+<?php } ?>
+<button id="Back" class="btn btn-default" style="margin: 0 0 0px 880px;"
+		onclick="history.go(-1);return false;" type="button">Back</button>
+</div>
+<?php } else {?>
+<div class="profileimg col_6 fleft">
+		<p>
+				You do not have permission to access this page
+		</p>
+	</div>
+<?php }?>
+
+
+

@@ -1,0 +1,372 @@
+<script type="text/javascript" src="/scripts/profileForm.js"></script>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+<?php
+$errors = $this->zendFormErrorFormatter($this->profileForm->getMessages());
+$edited = false;
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('select').each(function(){
+		var id=$(this).attr('id');
+		if(id=='position')
+			$("#"+id).select2();
+		else
+			$("#"+id).select2({minimumResultsForSearch:100});
+	});
+	$('#careerSynergy').click(function (e) {
+		if($(this).val() !=''){
+			$(this).datepicker("setDate", new Date($(this).val()) );
+		}
+		$(this).datepicker("option", "dateFormat", 'yy-mm-dd').datepicker( "show" );
+	   });
+	$("#careerSynergy").datepicker({
+		  onSelect: function(dateText) {
+			  var x= new Date($(this).val());
+			  if($('#careerStarted').val() !=undefined){
+				  var cstarted= new Date($('#careerStarted').val());
+				  if((cstarted-x)>0)
+					  alert("Overall Career Started must be before or same as Career Started in Synergy");
+			  }
+			  if((x - new Date()) > 0)
+					alert("Please Do Not Select Future Date");
+		  }
+		});
+	$('#careerStarted').click(function (e) {
+		if($(this).val() !=''){
+			$(this).datepicker("setDate", new Date($(this).val()) );
+		}
+		$(this).datepicker("option", "dateFormat", 'yy-mm-dd').datepicker( "show" );
+	   });
+	$("#careerStarted").datepicker({
+		  onSelect: function(dateText) {
+			  var x= new Date($(this).val());
+			  if($('#careerSynergy').val() !=undefined){
+				  var csynergy= new Date($('#careerSynergy').val());
+				  if((x-csynergy)>0)
+					  alert("Overall Career Started must be before or same as Career Started in Synergy");
+			  }
+			  if((x - new Date()) > 0)
+					alert("Please Do Not Select Future Date");
+		  }
+		});
+	$('#copyAddress').change(function() {
+        if($(this).is(":checked")) {
+            $('#permanentaddress').val($('#presentaddress').val());
+            $('#permanentcity').val($('#presentcity').val());
+           	$('#permanentstate').val($('#presentstate').val());
+           	$('.permanentstate .select2-choice span').html($('#permanentstate').find(":selected").text());
+            $('#permanentpincode').val($('#presentpincode').val());
+        }
+        else{
+        	$('#permanentaddress').val('');
+            $('#permanentcity').val('');
+            $('#permanentstate').val(0);
+         	$('.permanentstate .select2-choice span').html($('#permanentstate').find(":selected").text());
+            $('#permanentpincode').val('');
+        }
+    });
+	$('#birthday').click(function (e) {
+		if($(this).val() !=''){
+			$(this).datepicker("setDate", new Date($(this).val()) );
+		}
+		$(this).datepicker("option", "dateFormat", 'yy-mm-dd').datepicker( "show" );
+	   });
+	$("#birthday").datepicker({
+		  onSelect: function(dateText) {
+			  var x= new Date($(this).val());
+			  if((x - new Date()) > 0)
+					alert("Please Do Not Select Future Date");
+		  }
+		});
+});
+var fList = new Object();
+var changedVal = Array();
+$(document).ready(function() {
+	$.post('');
+	initFormChangeCheck();
+});
+function initFormChangeCheck() {
+	  for (var fOi = 0; fOi < document.forms[0].elements.length; fOi++) {
+	    el = document.forms[0].elements[fOi];
+	    fList[el.name] = el.value;
+	  }
+}
+function checkChange() {
+	  var changed = false;
+	  var count=0;
+	  for (var fOi = 0; fOi < document.forms[0].elements.length; fOi++) {
+	    el = document.forms[0].elements[fOi];
+	    if (fList[el.name] != el.value && el.id!='copyAddress') {
+	      changed = true;
+	      changedVal[count++] = el.id;
+	    }
+	  }
+	  $("#changedVal").val(changedVal);
+}
+</script>
+<h1 class="headbrd">Edit Your profile</h1>
+	<form class="profileForm" action="/user/updateprofile" method="post" onsubmit="checkChange()">
+		<input type="hidden" id="changedVal" name="changedVal">
+		<?php
+			$this->profileForm->userId->setAttrib('id', 'userId')->setName('userId')->setValue($this->userId);
+			echo $this->profileForm->userId->renderViewHelper();
+		?>
+        <div class="profileheadbox">
+		<p class="firstName formfield span6">
+			<label for="name" class="span2">First Name</label>
+			<span class="span3">
+				<?php
+					$this->profileForm->firstName->setAttrib('id', 'firstName')->setAttrib('class', 'span3');
+					echo $this->profileForm->firstName->renderViewHelper();
+				?>
+				<span id="invalid_firstName" class="error_text displayblock"><?php echo isset($errors['firstName']) ? $errors['firstName'] : ""?></span>
+		    </span>
+		</p>
+		<p class="lastName formfield span6">
+			<label for="name" class="span2">Last Name</label>
+			<span class="span3">
+				<?php
+					$this->profileForm->lastName->setAttrib('id', 'lastName')->setAttrib('class', 'span3');
+					echo $this->profileForm->lastName->renderViewHelper();
+				?>
+				<span id="invalid_lastName" class="error_text displayblock"><?php echo isset($errors['lastName']) ? $errors['lastName'] : ""?></span>
+			</span>
+		</p>
+        <br class="clear"  />
+  		<p class="empId formfield span6">
+			<label for="name" class="span2">Emp Id</label>
+			<span class="span3">
+				<?php
+					$this->profileForm->empId->setAttrib('id', 'empId')->setAttrib('class', 'span3');
+					echo $this->profileForm->empId->renderViewHelper();
+				?>
+				<span id="invalid_empId" class="error_text displayblock"><?php echo isset($errors['empId']) ? $errors['empId'] : ""?></span>
+		 	</span>
+		</p>
+		<p class="tel formfield span6">
+			<label for="name" class="span2">Contact No</label>
+			<span class="span3">
+				<?php
+					$this->profileForm->tel->setAttrib('id', 'tel')->setAttrib('class', 'span3');
+					echo $this->profileForm->tel->renderViewHelper();
+				?>
+				<span id="invalid_tel" class="error_text displayblock"><?php echo isset($errors['tel']) ? $errors['tel'] : ""?></span>
+			</span>
+		</p>
+		<br class="clear"  />
+		<p class="empId formfield span6">
+			<label for="name" class="span2">Total Exp</label>
+			<span class="span3 totalExpspan">
+				<?php
+					$this->profileForm->totalYears->setAttrib('id', 'totalYears')->setAttrib('class','listwidth2 span2');
+					$this->profileForm->totalYears->addMultiOption('years','Years');
+					for($exp=0;$exp<=$this->experience;$exp++){
+						$this->profileForm->totalYears->addMultiOption($exp, $exp);
+					}
+					echo $this->profileForm->totalYears->renderViewHelper();
+
+					$this->profileForm->totalMonths->setAttrib('id', 'totalMonths')->setAttrib('class','listwidth2 span2');
+					$this->profileForm->totalMonths->addMultiOption('months','Months');
+					for($expMnth=0;$expMnth<=11;$expMnth++){
+						$this->profileForm->totalMonths->addMultiOption($expMnth, $expMnth);
+					}
+					echo $this->profileForm->totalMonths->renderViewHelper();
+				?>
+				<span id="invalid_totalExp" class="error_text displayblock"><?php echo isset($errors['totalYears']) ? $errors['totalYears'] : ""?></br><?php echo isset($errors['totalMonths']) ? $errors['totalMonths'] : ""?></span>
+			</span>
+		</p>
+
+		<p class="empId formfield span6">
+		<label for="name" class="span2">Designation</label>
+		<span class="span3 position">
+			<?php
+				$this->profileForm->position->setAttrib('id', 'position')->setAttrib('class','listwidth3 span3');
+				$this->profileForm->position->addMultiOption(0,'Please Select');
+				foreach($this->position AS $position){
+					$this->profileForm->position->addMultiOption($position['positionId'], $position['position']);
+				}
+				echo $this->profileForm->position->renderViewHelper();
+			?>
+		 	   <span id="invalid_position" class="error_text displayblock"><?php echo isset($errors['position']) ? $errors['position'] : ""?></span>
+		</span>
+		</p>
+        <br class="clear"  />
+		<p class="email formfield span6">
+			<label for="name" class="span2">Email</label>
+			<span class="span3" style="width:244px">
+			<input type="text" id="email" name="email" value="<?php echo $this->user->getEmail();?>" style="display: none">
+			<span class="ellipsis">	<?php
+					/* $emailPrefix = explode('@',$this->user->getEmail());
+					$this->profileForm->email->setAttrib('id', 'email')->setValue($emailPrefix[0])->setAttrib('class', 'span3');
+					echo $this->profileForm->email->renderViewHelper(); */
+					echo $this->user->getEmail();
+				?>
+				</span>
+				<span id="invalid_email" class="error_text <?php echo isset($errors['email']) ? 'displayblock' : ''?>"><?php echo isset($errors['email']) ? $errors['email'] : ""?></span>
+		 	</span>
+		</p>
+		<p class="mainTechnology formfield span6">
+		<label for="name" class="span2">Main Technology</label>
+		<span class="span3 mainTechnology">
+			<?php
+				$this->profileForm->mainTechnology->setAttrib('id', 'mainTechnology')->setAttrib('class','listwidth3 span3');
+				$this->profileForm->mainTechnology->addMultiOption(0,'Please Select');
+				foreach($this->mainTechnology AS $mainTechnology){
+					$this->profileForm->mainTechnology->addMultiOption($mainTechnology['id'], $mainTechnology['technology']);
+				}
+				echo $this->profileForm->mainTechnology->renderViewHelper();
+			?>
+		 	   <span id="invalid_mainTechnology" class="error_text displayblock"><?php echo isset($errors['mainTechnology']) ? $errors['mainTechnology'] : ""?></span>
+		</span>
+		</p>
+		<br class="clear"  />
+		<p class="birthday formfield span6">
+		<label for="name" class="span2">Birthday</label>
+		<span class="span3 birthday">
+		 	<?php
+					$this->profileForm->birthday->setAttrib('id', 'birthday')->setAttrib('class', 'span3');
+					echo $this->profileForm->birthday->renderViewHelper();
+				?>
+		 <span id="invalid_birthday" class="error_text displayblock"><?php echo isset($errors['birthday']) ? $errors['birthday'] : ""?></span>
+		 </span>
+		 </p>
+		<br class="clear"  />
+		<p class="careerStarted formfield span6">
+		<label for="name" class="span2">Overall Career Started</label>
+		<span class="span3 careerStarted">
+		 	<?php
+					$this->profileForm->careerStarted->setAttrib('id', 'careerStarted')->setAttrib('class', 'span3');
+					echo $this->profileForm->careerStarted->renderViewHelper();
+				?>
+		 <span id="invalid_careerStarted" class="error_text displayblock"><?php echo isset($errors['careerStarted']) ? $errors['careerStarted'] : ""?></span>
+		 </span>
+		 </p>
+		 <p class="careerSynergy formfield span6">
+		 <label for="name" class="span2">Career Started in Synergy </label>
+		 <span class="span3 careerSynergy">
+		 	<?php
+					$this->profileForm->careerSynergy->setAttrib('id', 'careerSynergy')->setAttrib('class', 'span3');
+					echo $this->profileForm->careerSynergy->renderViewHelper();
+				?>
+		 <span id="invalid_careerSynergy" class="error_text displayblock"><?php echo isset($errors['careerSynergy']) ? $errors['careerSynergy'] : ""?></span>
+		 </span>
+		 </p>
+		 <br class="clear"  />
+		 <p class="presentAdd formfield span6">
+		 <span class="span6 presentAdd">
+		 <b>Present Address </b>
+		 </span>
+		 </p>
+		 <p class="permanentAdd formfield span6">
+		 <span class="span6 permanentAdd">
+		 <b>Permanent Address : </b>
+		 <input type="checkbox" id="copyAddress"/> Same as Present Address
+		 </span>
+		 </p>
+		 <br class="clear"  />
+		 <p class="presentaddress formfield span6">
+		 <label for="name" class="span2">Address </label>
+		 <span class="span3 presentaddress">
+		 	<?php
+					$this->profileForm->presentaddress->setAttrib('id', 'presentaddress')->setAttrib('class', 'span3');
+					echo $this->profileForm->presentaddress->renderViewHelper();
+				?>
+		 <span id="invalid_careerSynergy" class="error_text displayblock"><?php echo isset($errors['presentaddress']) ? $errors['presentaddress'] : ""?></span>
+		 </span>
+		 </p>
+		 <p class="permanentaddress formfield span6">
+		 <label for="name" class="span2">Address </label>
+		 <span class="span3 permanentaddress">
+		 	<?php
+					$this->profileForm->permanentaddress->setAttrib('id', 'permanentaddress')->setAttrib('class', 'span3');
+					echo $this->profileForm->permanentaddress->renderViewHelper();
+				?>
+		 <span id="invalid_careerSynergy" class="error_text displayblock"><?php echo isset($errors['permanentaddress']) ? $errors['permanentaddress'] : ""?></span>
+		 </span>
+		 </p>
+		 <br class="clear"  />
+		 <p class="presentcity formfield span6">
+		 <label for="name" class="span2">City </label>
+		 <span class="span3 presentcity">
+		 	<?php
+					$this->profileForm->presentcity->setAttrib('id', 'presentcity')->setAttrib('class', 'span3');
+					echo $this->profileForm->presentcity->renderViewHelper();
+				?>
+		 <span id="invalid_careerSynergy" class="error_text displayblock"><?php echo isset($errors['presentcity']) ? $errors['presentcity'] : ""?></span>
+		 </span>
+		 </p>
+		  <p class="permanentcity formfield span6">
+		 <label for="name" class="span2">City </label>
+		 <span class="span3 permanentcity">
+		 	<?php
+					$this->profileForm->permanentcity->setAttrib('id', 'permanentcity')->setAttrib('class', 'span3');
+					echo $this->profileForm->permanentcity->renderViewHelper();
+				?>
+		 <span id="invalid_careerSynergy" class="error_text displayblock"><?php echo isset($errors['permanentcity']) ? $errors['permanentcity'] : ""?></span>
+		 </span>
+		 </p>
+		 <br class="clear"  />
+		 <p class="presentstate formfield span6">
+		<label for="name" class="span2">State</label>
+		<span class="span3 presentstate">
+			<?php
+				$this->profileForm->presentstate->setAttrib('id', 'presentstate')->setAttrib('class','listwidth3 span3');
+				$this->profileForm->presentstate->addMultiOption(0,'Please Select');
+				foreach($this->state AS $state){
+					$this->profileForm->presentstate->addMultiOption($state['id'], $state['state']);
+				}
+				echo $this->profileForm->presentstate->renderViewHelper();
+			?>
+		 	   <span id="invalid_mainTechnology" class="error_text displayblock"><?php echo isset($errors['presentstate']) ? $errors['presentstate'] : ""?></span>
+		</span>
+		</p>
+		  <p class="permanentstate formfield span6">
+		 <label for="name" class="span2">State </label>
+		 <span class="span3 permanentstate">
+		 	<?php
+					$this->profileForm->permanentstate->setAttrib('id', 'permanentstate')->setAttrib('class', 'listwidth3 span3');
+					$this->profileForm->permanentstate->addMultiOption(0,'Please Select');
+					foreach($this->state AS $state){
+						$this->profileForm->permanentstate->addMultiOption($state['id'], $state['state']);
+					}
+					echo $this->profileForm->permanentstate->renderViewHelper();
+				?>
+		 <span id="invalid_careerSynergy" class="error_text displayblock"><?php echo isset($errors['permanentstate']) ? $errors['permanentstate'] : ""?></span>
+		 </span>
+		 </p>
+		 <br class="clear"  />
+		 <p class="presentpincode formfield span6">
+		 <label for="name" class="span2">Pincode </label>
+		 <span class="span3 presentpincode">
+		 	<?php
+					$this->profileForm->presentpincode->setAttrib('id', 'presentpincode')->setAttrib('class', 'span3');
+					echo $this->profileForm->presentpincode->renderViewHelper();
+				?>
+				<span id="invalid_mainTechnology" class="error_text displayblock"><?php echo isset($errors['presentpincode']) ? $errors['presentpincode'] : ""?></span>
+		</span>
+		 </p>
+		 <p class="permanentpincode formfield span6">
+		 <label for="name" class="span2">Pincode </label>
+		 <span class="span3 permanentpincode">
+		 	<?php
+					$this->profileForm->permanentpincode->setAttrib('id', 'permanentpincode')->setAttrib('class', 'span3');
+					echo $this->profileForm->permanentpincode->renderViewHelper();
+				?>
+		 <span id="invalid_mainTechnology" class="error_text displayblock"><?php echo isset($errors['permanentpincode']) ? $errors['permanentpincode'] : ""?></span>
+		</span>
+		</p>
+		 <br class="clear"  />
+        </div>
+        <div class="profilefooterbox">
+		<p class="formfield btnAction" style="padding-top:5px;">
+        <span class="span6">
+					<?php
+					$this->profileForm->submit->setLabel('Save')->setAttrib('onclick','return validateProfileForm()')->setAttrib('class', 'btn btn-primary btn-small');
+					echo $this->profileForm->submit->renderViewHelper();
+					?>
+					<a class="btn btn-small" href="/admin/myprofile">Cancel</a>
+		 </span>
+		</p>
+        </div>
+		<div class="clear"></div>
+	</form>

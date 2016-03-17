@@ -1,0 +1,62 @@
+<link rel="stylesheet" href="/styles/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<script src="/scripts/modalwindow/shadowbox.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+	function SBopen() {
+	    document.body.style.overflow = "hidden";
+	    document.body.style.padding = "0 17px 0 0";
+	}
+	function SBclose() {
+	    document.body.style.overflow = "auto";
+	    document.body.style.padding = "0";
+	}
+	Shadowbox.init({
+	    onOpen: SBopen,
+	    onClose: SBclose
+	});
+</script>
+<?php
+if(empty($this->reportArray)) { ?>
+<div>No Entries found </div>
+<?php } else{ ?>
+<table class="table">
+	<thead>
+		<tr>
+			<th>User Name</th>
+			<th>Total Time</th>
+			<th>No.of Entry</th>
+			<th>No. of Exits</th>
+			<th>Time out of office</th>
+			<th>Net working hours</th>
+			<th>Avg Total Time</th>
+			<th>Avg No.of Entry</th>
+			<th>Avg No. of Exits</th>
+			<th>Avg Time out of office</th>
+			<th>Avg Net working hours</th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php foreach($this->reportArray as $row){
+		?>
+		<tr>
+			<td><a class="userlink" rel="shadowbox;height=500;width=1100"  href="/admin/viewbydaterange?userId=<?php echo $row['Id'];?>&fromdate=<?php echo $this->fromDate;?>&todate=<?php echo $this->toDate;?>"><?php echo $row['Name']?></a></td>
+			<?php if(isset($row['NoRecords'])){?>
+			<td colspan='10'><h6 align="center"><?php echo $row['NoRecords']?></h6></td>
+			<?php }else{?>
+				<td><?php echo $row['Total Time']?></td>
+				<td><?php echo $row['Entry']?></td>
+				<td><?php echo $row['Exit']?></td>
+				<td><?php echo $row['Total Time Out']?></td>
+				<td><?php echo $row['Net Working Hours']?></td>
+				<td><?php echo $row['Avg Total Time']?></td>
+				<td><?php echo $row['Avg Entry']?></td>
+				<td><?php echo $row['Avg Exit']?></td>
+				<td><?php echo $row['Avg Total Time Out']?></td>
+				<td><?php echo $row['Avg Net Working Hours']?></td>
+			<?php }?>
+		</tr>
+	<?php
+		}?>
+	</tbody>
+</table>
+<?php } ?>
+

@@ -1,0 +1,1 @@
+ALTER TABLE `resource_management`.`user_skills_detail` MODIFY COLUMN `exp_months` VARCHAR(45) DEFAULT NULL;

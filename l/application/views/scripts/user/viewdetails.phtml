@@ -1,0 +1,222 @@
+<?php
+$userSkillDetail = $this->user->getUserSkillDetail();
+$photoUrl = '/images/userLogin2.png';
+?>
+	<div class="headTitle">
+	    <h1 class="headbrd">Profile Details</h1>
+	</div>
+	<div class="profilehead">
+		<div class="profileimg col_6 fleft">
+			<p>
+				<img src="<?=$photoUrl?>" width="60" height="60" alt=" " />
+				<?=$this->user->getFirstName()." ".$this->user->getLastName();?>
+			</p>
+		</div>
+		<!-- <div class="fleft info col_4">
+		<p><span>Date of Birth</span> : 12 june 1988</p>
+		<p><span>Gender</span> : male</p>
+		<p><span>language</span> : English, Hindi, German</p>
+		</div> -->
+	</div>
+
+<div class="profileDetails">
+	<div class="row">
+		<label class="span2">Contact No</label> <span class="span10">: <?=($this->user->getPhoneNumber()==0) ? 'Not Specified' : $this->user->getPhoneNumber();?></span>
+		<div style="clear:both;"></div>
+        <label class="span2">Email</label> <span class="span10">: <?=$this->user->getEmail();?></span>
+	</div>
+</div>
+
+	<div class="profileDetails">
+		<h2></h2>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">Work Experience</label>
+			<span class="span10">:
+				<?php if(count($this->user->getUserDetail())>0){?>
+					<?=$this->user->getUserDetail()->getExpYears()." Year(s) ". $this->user->getUserDetail()->getExpMonths()." Month(s)";?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			</span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">Designation</label>
+			<span class="span10">:
+				<?php if(count($this->user->getUserDetail())>0){?>
+				<?=$this->user->getUserDetail()->getPosition()->getPosition();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">Main Technology</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getMainTechnology())>0){?>
+				<?=$this->user->getUserDetail()->getMainTechnology()->getTechnology();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">Overall Career Started</label>
+			<span class="span10">:
+				<?php if(count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getCareerStarted())>0){?>
+				<?=$this->user->getUserDetail()->getCareerStarted()->format('Y-m-d');?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">Career Started in Synergy</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getCareerSynergy())>0){?>
+				<?=$this->user->getUserDetail()->getCareerSynergy()->format('Y-m-d');?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">Birthday</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getBirthday())>0){?>
+				<?=$this->user->getUserDetail()->getBirthday()->format('Y-m-d');?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<br>
+		<div class="profileRow">
+			<b>Present Address </b>
+			<br>
+			<label class="span2 nomarginleft">Address</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0  &&  count($this->user->getUserDetail()->getPresentAddress())>0){?>
+				<?=$this->user->getUserDetail()->getPresentAddress()?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">City</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0  &&  count($this->user->getUserDetail()->getPresentCity())>0){?>
+				<?=$this->user->getUserDetail()->getPresentCity();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">State</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPresentState())>0){?>
+				<?=$this->user->getUserDetail()->getPresentState()->getState();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">Pincode</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0  &&  count($this->user->getUserDetail()->getPresentPincode())>0){?>
+				<?=$this->user->getUserDetail()->getPresentPincode();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<br>
+		<div class="profileRow">
+			<b>Permanent Address </b>
+			<br>
+			<label class="span2 nomarginleft">Address</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPermanentAddress())>0){?>
+				<?=$this->user->getUserDetail()->getPermanentAddress();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">City</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPermanentCity())>0){?>
+				<?=$this->user->getUserDetail()->getPermanentCity();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">State</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPermanentState())>0){?>
+				<?=$this->user->getUserDetail()->getPermanentState()->getState();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div class="profileRow">
+			<label class="span2 nomarginleft">Pincode</label>
+			<span class="span10">:
+				<?php if( count($this->user->getUserDetail())>0 &&  count($this->user->getUserDetail()->getPermanentPincode())>0){?>
+				<?=$this->user->getUserDetail()->getPermanentPincode();?>
+				<?php }else{?>
+					Not Specified
+				<?php }?>
+			 </span>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+	 <table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+       <thead>
+       <tr>
+         <td class=" profileaside" width="15%"><label>Skiill name</label></td>
+         <td class=" profileaside" width="15%"><label>Last used</label></td>
+         <td class=" profileaside" width="15%"><label>Skill level</label></td>
+         <td class=" profileaside" width="15%"><label>Experience (Months)</label></td>
+         <td class=" profileaside" width="35%"><label>Project</label></td>
+         <td class=" profileaside" width="5%"><label>Verified</label></td>
+       </tr>
+       </thead>
+       <tbody>
+       	<?php
+		if(count($userSkillDetail)>0){
+			foreach($userSkillDetail as $userSkill){?>
+          <tr class="">
+            <td class="span2 profileaside txtcenter"><?=$userSkill->getSkill()->getSkillName();?></td>
+            <td class="span2 profileaside txtcenter"><?=$userSkill->getLastUsedMonth()." ".$userSkill->getLastUsedYear();?></td>
+            <td class="span2 profileaside txtcenter"><?=$userSkill->getLevel()->getLevelName();?></td>
+            <td class="span2 profileaside txtcenter"><?=$userSkill->getExpMonths();?></td>
+            <td class="span2 profileaside txtcenter"><?php $prjctDtlArr = array();
+							foreach ($userSkill->getProjectDetail() as $projectDetails){
+								$prjctDtlArr[] = $projectDetails->getProject()->getProjectName();
+							}
+							echo implode(', ', $prjctDtlArr);
+						?>
+
+            </td>
+            <td class="span2 profileaside txtcenter"><?php if($userSkill->getIsVerified()==1){ echo "<img src='/images/restricted.png'/>";} else if($userSkill->getIsVerified()==2){ echo "<img src='/images/green_check.png'/>";} else echo "-";?></td>
+          </tr>
+          <?php }
+		}else{?>
+			 <tr class="">
+              <td class="profileaside" colspan="6">
+                <p align="center">No Skills added yet. Why not to add one?</p>
+				<p align="center"><a href="/user/updateskill/userId/<?=$this->user->getUserId()?>">Manage Your Skills<span class="displayblock"><img src="/images/manage-plus.png"/></span></a></p>
+               </td>
+             </tr>
+
+		<?php }?>
+       </tbody>
+     </table>
+    <div class="clear"></div>

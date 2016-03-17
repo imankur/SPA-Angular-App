@@ -1,0 +1,42 @@
+<?php
+if(empty($this->TimeDetails)) { ?>
+<div>No Entries found for selected date</div>
+<?php } else{ ?>
+<div class="lead"><?php echo "All Employee";?><div class="pull-right"><?php echo $this->date;?></div></div>
+<table class="table">
+	<thead>
+		<tr>
+			<th><a class="sortname" href="#">User Name</a><i  class="icon-arrow-<?php echo $this->userName_sort_order=='ASC'?'up':'down' ?>"></i></th>
+			<th><a class="sortid" href="#">ID no</a><i  class="icon-arrow-<?php echo $this->ID_sort_order=='ASC'?'up':'down' ?>"></i></th>
+			<th>First Event</th>
+			<th>Last Event</th>
+			<th>No.of Entry</th>
+			<th>No. of Exits</th>
+			<th>Total Working hours</th>
+			<th>Time out of office</th>
+			<th><a class="sortNWH" href="#">Net working hours</a><i  class="icon-arrow-<?php echo $this->NWH_sort_order=='ASC'?'up':'down' ?>"></i></th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php foreach($this->TimeDetails as $row){
+	?>
+		<tr <?php if($row['Net Working Hours']<'08:00:00'&& !isset($row['Holiday']))  echo "style='background-color:#C67171;color:#ffffff;'"; ?> >
+			<td><a class="userlink" <?php echo ($row['Net Working Hours']<'08:00:00' && !isset($row['Holiday']))?'style="color:#ffffff;"':''; ?> href="/admin/viewbyuser?userId=<?php echo $row['ID']; ?>"><?php echo $row['User Name']?></a></td>
+			<td><?php echo $row['ID']?></td>
+			<?php if(isset($row['Holiday'])){?>
+					<td colspan='8'><h6 align="center"><?php echo $row['Holiday']?></h6></td>
+			<?php }else{?>
+				<td><?php echo $row['First Event']?></td>
+				<td><?php echo $row['Last Event']?></td>
+				<td><?php echo $row['Entry']?></td>
+				<td><?php echo $row['Exit']?></td>
+				<td><?php echo $row['Total Time']?></td>
+				<td><?php echo $row['Total Time Out']?></td>
+				<td><?php echo $row['Net Working Hours']?></td>
+			<?php }?>
+		</tr>
+	<?php }?>
+	</tbody>
+</table>
+<?php } ?>
+

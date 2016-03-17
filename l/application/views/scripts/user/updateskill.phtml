@@ -1,0 +1,271 @@
+<script type="text/javascript" src="/scripts/profileForm.js"></script>
+<?php
+$errors = $this->zendFormErrorFormatter($this->skillForm->getMessages());
+$skillDetailArr = array();
+$userSkillDetail =  $this->user->getUserSkillDetail();
+$skillDetailArr['userSkillId']=array();
+$skillDetailArr['project']=array();
+$skillDetailArr['skill'] = array();
+$skillDetailArr['experience'] = array();
+$skillDetailArr['month'] = array();
+$skillDetailArr['year'] = array();
+$skillDetailArr['level'] = array();
+foreach ($userSkillDetail as $val){
+	$skillDetailArr['userSkillId'][] = $val->getUserSkillsDetailId();
+	$skillDetailArr['skill'][] = $val->getSkill()->getSkillId();
+	$skillDetailArr['experience'][] = $val->getExpMonths();
+	$skillDetailArr['month'][] = $val->getLastUsedMonth();
+	$skillDetailArr['year'][] = $val->getLastUsedYear();
+	$skillDetailArr['level'][] = $val->getLevel()->getLevelId();
+	$skillDetailArr['project'][$val->getSkill()->getSkillId()] = null;
+	foreach ($val->getProjectDetail() as $projectDtl){
+		$skillDetailArr['project'][$val->getSkill()->getSkillId()][] = $projectDtl->getProject()->getProjectId();
+	}
+}
+$edited = false;
+if(count($this->user->getUserDetail())>0)
+	$edited = true;
+?>
+<script type="text/javascript">
+$(document).ready(function() {
+	$('select').each(function(){
+		var id=$(this).attr('id');
+		if($(this).hasClass('experience') || $(this).hasClass('month') || $(this).hasClass('year') || $(this).hasClass('level'))
+			$("#"+id).select2({minimumResultsForSearch:100});
+		else
+			$("#"+id).select2();
+	});
+});
+
+var fList = new Object();
+var changedVal = Array();
+$(document).ready(function() {
+	initFormChangeCheck();
+	function initFormChangeCheck() {
+	  for (var fOi = 0; fOi < document.forms[0].elements.length; fOi++) {
+	    el = document.forms[0].elements[fOi];
+	    fList[el.name] = el.value;
+	  }
+	}
+});
+function checkChange() {
+	  var changed = false;
+	  var count=0;
+	  for (var fOi = 0; fOi < document.forms[0].elements.length; fOi++) {
+	    el = document.forms[0].elements[fOi];
+	    if (fList[el.name] != el.value && el.type!='button' && (el.name!='skills' && el.name!='experience' && el.name!='level' && el.name!='month' && el.name!='year' && el.name!='project[]' && el.id!='assocArr'
+		    	 && el.name!='userSkillDetailId')) {
+	    	changed = true;
+	      	changedVal[count++] = el.id;
+	    }
+	  }
+	  $("#changedVal").val(changedVal);
+	}
+$('.removeBtn').live('click',function() {
+	var rowId = $(this).attr('id');
+	var rowNum = rowId.replace('removeSkill_','');
+	var num=$('.skillRow').length;
+     // how many "duplicatable" input fields we currently have
+
+    if(num>1)
+    $('#skillRow_' + rowNum).remove();
+     // remove the last element
+
+    validateSkills();
+    HasDuplicate('skills');
+});
+</script>
+<div id="right" class="content">
+<h1 class="headbrd">Add/Edit Your Skills</h1>
+	<form class="skillForm" action="/user/updateskill" method="post" onsubmit="checkChange()">
+		<?php
+			$this->skillForm->userId->setAttrib('id', 'userId')->setName('userId')->setValue($this->userId);
+			echo $this->skillForm->userId->renderViewHelper();
+		?>
+		<div id="skills span12">
+			<input type="hidden" id="changedVal" name="changedVal">
+			<input type="hidden" id="skl" name="skl" value="<?=$this->skillVal?>">
+			<input type="hidden" id="exp" name="exp" value="<?=$this->expVal?>">
+			<input type="hidden" id="lstMnth" name="lastMonth" value="<?=$this->mnthVal?>">
+			<input type="hidden" id="lstYear" name="lastYear" value="<?=$this->yrVal?>">
+			<input type="hidden" id="lvl" name="lvl" value="<?=$this->lvlVal?>">
+			<input type="hidden" id="prjt" name="prjt" value="<?=$this->prjtVal?>">
+			<input type="hidden" id="assocArr" name="assocArr">
+			<div class="skillRowheader row-fluid">
+			   <div class="skill profileaside span2">
+							<label id="dpdLabl" class="displayblock ">Skills<span class="required clrgray"></span></label>
+				</div>
+				<div class="profileaside span2">
+							<label id="dpdLabl" class="displayblock ">Experience (Months)<span class="required clrgray"></span></label>
+				</div>
+				<div class="profileaside span2">
+							<label id="dpdLabl" class="displayblock ">Last Used<span class="required clrgray"></span></label>
+				</div>
+				<div class="profileaside span2">
+							<label id="dpdLabl" class="displayblock ">Level<span class="required clrgray"></span></label>
+				</div>
+				<div class="profileaside span3">
+							<label id="dpdPrjct" class="displayblock ">Project</label>
+				</div>
+				<div class="profileaside span1" style="margin-left: 10px;">
+							<label id="dpdAction" class="displayblock ">Action</label>
+				</div>
+			</div>
+			<div style="clear:both;"></div>
+			<div class="skillRowcontent row-fluid">
+			<?php $rowCount=1;
+				$skillIdVal=0;
+				for($sklRow=1;$sklRow<=$this->skillRowCount;$sklRow++){?>
+					<div id="skillRow_<?=$sklRow?>" class="skillRow">
+						<div class="skill profileaside span2">
+							<div>
+								<?php $this->skillForm->skills->setAttrib('id', 'skills_'.$sklRow)->setAttrib('class','fullWidth skill');
+									$this->skillForm->skills->addMultiOption(0,'Skills');
+									$val=0;
+									foreach($this->skills AS $skill){
+										$this->skillForm->skills->addMultiOption($skill['skillId'], $skill['skillName']);
+										if(count($skillDetailArr)>0 ){
+											if($sklRow<=count($skillDetailArr['skill']) && $skill['skillId']==$skillDetailArr['skill'][$rowCount-1]){
+												$skillIdVal = $skill['skillId'];
+												$this->skillForm->skills->setValue($skill['skillId']);
+											}
+										}
+									}
+									echo $this->skillForm->skills->renderViewHelper();
+								?>
+							</div>
+						</div>
+						<div class="profileaside span2">
+							<div>
+								<?php $this->skillForm->experience->setAttrib('id', 'experience_'.$sklRow)->setAttrib('class', 'fullWidth experience');
+									$this->skillForm->experience->addMultiOption(0, 'Experience');
+									$monthArray = array();
+									for($exp=1;$exp<=$this->experience;$exp++){
+										$monthArray[$exp] = $exp;
+										if($exp==48)
+											$monthArray['> 48'] = '> 48';
+
+										$this->skillForm->experience->addMultiOption($monthArray[$exp], $monthArray[$exp]);
+										if(count($skillDetailArr)>0 ){
+											if($sklRow<=count($skillDetailArr['experience']) && $monthArray[$exp]==$skillDetailArr['experience'][$rowCount-1]){
+												$this->skillForm->experience->setValue($skillDetailArr['experience'][$rowCount-1]);
+											}
+										}
+									}
+									$this->skillForm->experience->addMultiOption('48 + ', '> 48');
+									echo $this->skillForm->experience->renderViewHelper();
+								?>
+							</div>
+						</div>
+						<div class="profileaside span2">
+							<div  id='total_<?=$sklRow?>' name='total'>
+								<?php
+									$this->skillForm->month->setAttrib('id', 'month_'.$sklRow)->setAttrib('class', 'halfWidth month');
+									$this->skillForm->month->addMultiOption(0, 'Month');
+									/* for ($i = 1; $i <= 12; $i++)
+									{
+									$mon = date("M", mktime(0, 0, 0, $i+1, 0, 0, 0));
+									$this->skillForm->month->addMultiOption($i, $mon);
+									} */
+									for ($i = 1; $i <= 12; $i++){
+										$this->skillForm->month->addMultiOption($i, $this->month[$i]);
+										if(count($skillDetailArr)>0 ){
+											if($sklRow<=count($skillDetailArr['month']) && $this->month[$i]==$skillDetailArr['month'][$rowCount-1]){
+												$this->skillForm->month->setValue($i);
+											}
+										}
+									}
+									echo $this->skillForm->month->renderViewHelper();
+
+									$this->skillForm->year->setAttrib('id', 'year_'.$sklRow)->setAttrib('class', 'halfWidth year');
+									$this->skillForm->year->addMultiOption(0, 'Year');
+									for($year=date("Y");$year>=$this->year;$year--){
+										$this->skillForm->year->addMultiOption($year, $year);
+										if(count($skillDetailArr)>0 ){
+											if($sklRow<=count($skillDetailArr['year']) && $year==$skillDetailArr['year'][$rowCount-1]){
+												$this->skillForm->year->setValue($year);
+											}
+										}
+									}
+									echo $this->skillForm->year->renderViewHelper();
+								?>
+							</div>
+						</div>
+						<div class="profileaside span2">
+							<div>
+								<?php
+								$this->skillForm->level->setAttrib('id', 'level_'.$sklRow)->setAttrib('class', 'fullWidth level');
+								$this->skillForm->level->addMultiOption(0, 'Level');
+								foreach($this->level AS $level){
+									$this->skillForm->level->addMultiOption($level['levelId'], $level['levelName']);
+									if(count($skillDetailArr)>0 ){
+										if($sklRow<=count($skillDetailArr['level']) && $level['levelId']==$skillDetailArr['level'][$rowCount-1]){
+											$this->skillForm->level->setValue($level['levelId']);
+										}
+									}
+								}
+								echo $this->skillForm->level->renderViewHelper();
+								?>
+							</div>
+						</div>
+						<div class="profileaside span3">
+							<div>
+								<?php
+								$projectval = '';
+								$this->skillForm->project->setAttrib('id', 'project_'.$sklRow)->setAttrib('multiple','multiple')->setAttrib('class', 'fullWidth project');
+								foreach($this->project AS $project){
+									$this->skillForm->project->addMultiOption($project['projectId'], $project['projectName']);
+									if(count($skillDetailArr)>0 ){
+										if($sklRow<=count($skillDetailArr['project']) && isset($skillDetailArr['project'][$skillIdVal]) && in_array($project['projectId'], $skillDetailArr['project'][$skillIdVal])){
+											$projectval = isset($skillDetailArr['project'][$skillIdVal]) ? $skillDetailArr['project'][$skillIdVal] : '';
+										}
+									}
+									$this->skillForm->project->setValue($projectval);
+								}
+								echo $this->skillForm->project->renderViewHelper();
+								?>
+							</div>
+						</div>
+						<?php if($sklRow>=2):?>
+							<div class="profileaside span1" style="margin-left: 10px;">
+								<div style="margin: 0">
+								   <?php
+									   $this->skillForm->removeSkill->setLabel('Delete')->setAttrib('id','removeSkill_'.$sklRow)->setAttrib('class','removeBtn btn btn-small');
+									   echo $this->skillForm->removeSkill->renderViewHelper();
+								   ?>
+								</div>
+							</div>
+						<?php endif;?>
+						<div class="profileaside span11">
+							<span id="invalid_lastUsed_<?=$sklRow;?>" class="skillerror" name="invalid_lastUsed"></span>
+						</div>
+						<input type="hidden" name="userSkillDetailId" id="userSkillDetailId_<?=$sklRow?>" value="<?=(count($skillDetailArr['userSkillId']) > 0 && $skillDetailArr['userSkillId'][$rowCount-1]!=0) ? $skillDetailArr['userSkillId'][$rowCount-1] : 0;?>">
+					</div>
+			<?php
+			$rowCount++;}?>
+			<div class="notice"><em>*</em> Mandatory fields.</div>
+			<div style="clear:both;"></div>
+			</div>
+            <div class="errorpanel">
+				<span id="invalid_skills" class="skillerror displayblock" name="invalid_skills"></span>
+				<span id="invalid_skillFields" class="skillerror displayblock" name="invalid_skillFields"></span>
+			</div>
+            <div id="btn" class="btnAction">
+				<p>
+					<?php
+						$this->skillForm->addSkill->setLabel('Add Skill')->setAttrib('class','btn btn-primary btn-small');
+						echo $this->skillForm->addSkill->renderViewHelper();
+					?>
+
+					<?php
+					$this->skillForm->submit->setLabel('Save')->setAttrib('onclick','return validateSkillForm()')->setAttrib('class','btn btn-primary btn-small');
+					echo $this->skillForm->submit->renderViewHelper();
+					?>
+
+					<a class="btn btn-small cancel" href="/admin/myprofile">Cancel</a>
+				</p>
+		</div>
+		<div style="clear: both;"></div>
+		</div>
+	</form>
+</div>

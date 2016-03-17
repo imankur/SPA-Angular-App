@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="/styles/report.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+<script type="text/javascript">
+		$(document).ready(function() {
+			var load_img='<img src="/images/loading1.gif" style="display: block;margin: auto; "></img>';
+			$('#datepicker').click(function (e) {
+				$(this).datepicker("option", "dateFormat", 'yy-mm-dd').datepicker( "show" );
+			   });
+
+			$("#datepicker").datepicker({
+				  onSelect: function(dateText) {
+					  var x= new Date($(this).val());
+					  if((x - new Date()) > 0)
+							alert("Please Do Not Select Future Date");
+					  else{
+						  $("#content").html(load_img);
+						  $.ajax({
+						 		type : 'POST',
+						 		url: '/admin/viewbydate',
+						    	data: "format=json&date="+$.toJSON($(this).val()),
+						    	success: function(res, stat) {
+						    		$("#content").html(res);
+							    },
+						 });
+						 $("#export").prop("disabled",false);
+					  }
+				  }
+				});
+			 $("#content a.sortname").live('click',function(){
+					 $.ajax({
+					 		type : 'POST',
+					 		url: '/admin/viewbydate',
+					    	data: "format=json&date="+$.toJSON($("#datepicker").val())+"&sort_by="+$.toJSON('UserName'),
+					    	success: function(res, stat) {
+					    		$("#content").html(res);
+						    },
+					 });
+		        });
+
+			 $("#content a.sortid").live('click',function(){
+					$.ajax({
+				 		type : 'POST',
+				 		url: '/admin/viewbydate',
+				    	data: "format=json&date="+$.toJSON($("#datepicker").val())+"&sort_by="+$.toJSON('ID'),
+				    	success: function(res, stat) {
+				    		$("#content").html(res);
+					    },
+				 });
+		       });
+			 $("#content a.sortNWH").live('click',function(){
+					 $.ajax({
+					 		type : 'POST',
+					 		url: '/admin/viewbydate',
+					    	data: "format=json&date="+$.toJSON($("#datepicker").val())+"&sort_by="+$.toJSON('NWH'),
+					    	success: function(res, stat) {
+					    		$("#content").html(res);
+						    },
+					 });
+		       });
+
+			$('#export').click(function() {
+					window.location.href='/admin/getcsvfile?date='+$("#datepicker").val();
+			});
+		});
+	</script>
+
+<div class="row-fluid show-grid whpanel-bordered" style="padding-bottom: 16px;">
+	<h4 class="headerTitle">Select View</h4>
+	&nbsp
+	<label class="radio inline">
+	View By Date :
+	</label>
+	<input type="text" id="datepicker" style="margin:0;" />
+	<button id="export" class="btn btn-default" style="margin: 0 0 0px 20px;"
+		type="button" disabled="disabled">Export</button>
+</div>
+<div id="content" class="content-main"></div>
+
+

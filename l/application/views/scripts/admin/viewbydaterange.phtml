@@ -1,0 +1,68 @@
+<script type="text/javascript">
+	$( document ).ready(function() {
+		$('#export').click(function() {
+			window.location.href="/admin/getcsvfile?todate=<?php echo $this->toDate; ?>&fromdate=<?php echo $this->fromDate; ?>&userId=<?php echo $this->userId;?>";
+		});
+	});
+</script>
+<?php if($this->TimeDetails != "accessdenied"){?>
+<div class="lead"><?php echo $this->uName;?>
+<?php if(!empty($this->TimeDetails)){?>
+	<div class="pull-right">
+		<button id="export" class="btn btn-default"
+			style="margin: 0 0 0px 20px;" type="button" >Export
+			</button>
+	</div>
+
+	<?php } ?>
+</div>
+<h5><?php echo $this->fromDate;?>  To <?php echo date('Y-m-d',strtotime($this->toDate.' -1 day'));?></h5>
+<div class="content-main" id="content">
+<?php if(empty($this->TimeDetails)) { ?>
+<div>No Entries found </div>
+<?php } else{ ?>
+<table class="table">
+		<thead>
+			<tr>
+				<th>Date</th>
+				<th>Day</th>
+				<th>First Event</th>
+				<th>Last Event</th>
+				<th>No.of Entry</th>
+				<th>No. of Exits</th>
+				<th>Total Working hours</th>
+				<th>Time out of office</th>
+				<th>Net working hours</th>
+			</tr>
+		</thead>
+		<tbody>
+		<?php foreach($this->TimeDetails as $row){
+		?>
+		<tr
+				<?php if($row['Net Working Hours']<'08:00:00' && !isset($row['Holiday']))  echo "style='background-color:#C67171;color:#ffffff;'" ?>>
+				<td><?php echo date('d/m/Y',strtotime($row['Date']));?></td>
+				<td><?php echo $row['Day']?></td>
+				<?php if(isset($row['Holiday'])){?>
+					<td colspan='8'><h6 align="center"><?php echo $row['Holiday']?></h6></td>
+				<?php }else{?>
+					<td><?php echo $row['First Event']?></td>
+					<td><?php echo $row['Last Event']?></td>
+					<td><?php echo $row['Entry']?></td>
+					<td><?php echo $row['Exit']?></td>
+					<td><?php echo $row['Total Time']?></td>
+					<td><?php echo $row['Total Time Out']?></td>
+					<td><?php echo $row['Net Working Hours']?></td>
+				<?php }?>
+			</tr>
+		<?php } ?>
+	</tbody>
+	</table>
+<?php }
+ } else {?>
+<div class="profileimg col_6 fleft">
+		<p>
+				You do not have permission to access this page
+		</p>
+	</div>
+<?php }?>
+

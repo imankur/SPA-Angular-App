@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<!DOCTYPE tmx SYSTEM "tmx14.dtd">
+<tmx version="1.4">
+	<header creationtoolversion="1.0.0" datatype="winres" segtype="sentence"
+		adminlang="en-us" srclang="en-us" o-tmf="abc"></header>
+	<body>
+	<tu tuid='Password'>
+			<tuv xml:lang="en">
+				<seg><![CDATA[Password]]></seg>
+			</tuv>
+			<tuv xml:lang="es">
+				<seg><![CDATA[Password]]></seg>
+			</tuv>
+			<tuv xml:lang="fr">
+				<seg><![CDATA[Password]]></seg>
+			</tuv>
+	</tu>
+</body>
+</tmx>

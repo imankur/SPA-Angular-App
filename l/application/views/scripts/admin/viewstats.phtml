@@ -1,0 +1,257 @@
+<script type="text/javascript" src="/scripts/google_jsapi.js"></script>
+<link rel="stylesheet" href="/styles/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<script src="/scripts/modalwindow/shadowbox.js" type="text/javascript" charset="utf-8"></script>
+
+<script type="text/javascript">
+function SBopen() {
+    document.body.style.overflow = "hidden";
+    document.body.style.padding = "0 17px 0 0";
+}
+function SBclose() {
+    document.body.style.overflow = "auto";
+    document.body.style.padding = "0";
+}
+Shadowbox.init({
+    onOpen: SBopen,
+    onClose: SBclose
+});
+$(document).ready(function() {
+	$('select').each(function(){
+		var id=$(this).attr('id');
+		$("#"+id).select2();
+	});
+});
+google.load('visualization', '1', {packages: ['corechart','table']});
+function init() {
+
+    var options = {
+	'legend': 'bottom',
+      animation:{
+    	width: 400,
+        height: 240,
+        duration: 1000,
+        easing: 'out',
+      },
+      vAxis: {title: "No of employees", minValue:0, maxValue:<?=$this->totalEmployee?>},
+      hAxis: {viewWindow: {min:0, max:5}}
+    };
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Employee');
+    data.addColumn('number', 'Data based on skill and level');
+    data.addRow(['', 0]);
+    //data.addRow(['V', 200]);
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('visualization'));
+    google.visualization.events.addListener(chart, 'select', selectHandler);
+
+    var button = document.getElementById('draw');
+    var prevButton = document.getElementById('prevBtn');
+    var nextButton = document.getElementById('nxtBtn');
+    var changeZoomButton = document.getElementById('zoomBtn');
+
+    function selectHandler(e) {
+    	keyUpTime = 1000; // 1 sec
+    	keyUpTimeout = null;
+    	var selection = chart.getSelection();
+        //var message = '';
+    	for (var i = 0; i < selection.length; i++) {
+        	var item = selection[i];
+        	if (item.row != null && item.column != null) {
+	        	var txt = data.getFormattedValue(item.row, 0).replace(/\./g,"");
+	            var str = txt;
+	            var nameArr = str.split(' ');
+				var name = nameArr.join('_');
+				$("#tableData").addClass('loader').css('min-height','380px');
+		    	$('#dynamic').css({'opacity':'0.5','filter':'alpha(opacity=50)'});
+		    	$('#tableHeading').html('Criteria: ');
+		    	var tbodyId = $("#dynamic tbody[name="+name+"]").attr('id');
+	            $(".tblData").hide();
+	            keyUpTimeout = setTimeout(function() {
+	            	$('#tableHeading').html('Criteria: '+data.getFormattedValue(item.row, 0)+' <span style="float: right"><a href="/admin/createpdf/?Criteria=' + data.getFormattedValue(item.row, 0) + '&searchBy=Skill\" target="_blank">Export Pdf</a>');
+	           	 	$("#dynamic tbody[name="+name+"]").show();
+	            	$("#tableData").removeClass('loader').css('min-height','auto');
+	    	    	$('#dynamic').css({'opacity':'1','filter':'alpha(opacity=100)'});
+				}, keyUpTime);
+
+	            //message += '{row:' + item.row + ',column:' + item.column + '} = ' + str + '\n';
+      		}
+    	}
+    }
+    function drawChart() {
+      // Disabling the button while the chart is drawing.
+      button.disabled = true;
+      prevButton.disabled = true;
+      nextButton.disabled = true;
+      changeZoomButton.disabled = true;
+      google.visualization.events.addListener(chart, 'ready',
+          function() {
+            button.disabled = false;
+          });
+      chart.draw(data, options);
+    }
+
+    prevButton.onclick = function() {
+        options.hAxis.viewWindow.min -= 5;
+        options.hAxis.viewWindow.max -= 5;
+        drawChart();
+      }
+    nextButton.onclick = function() {
+        options.hAxis.viewWindow.min += 5;
+        options.hAxis.viewWindow.max += 5;
+        drawChart();
+    }
+
+    button.onclick = function() {
+        $('#visualization,div.chartAction').css({'opacity':'0.2','filter':'alpha(opacity=20)'});
+    	var item = {
+				skill : $("#skill").val(),
+				level : $("#level").val()
+		};
+		 $.ajax({
+		 		type : 'POST',
+		 		url: '/admin/employeestats',
+		    	data: "format=json&data="+$.toJSON(item),
+		    	success: function(res, stat) {
+		    		data = new google.visualization.DataTable();
+		    	    data.addColumn('string', 'Employee');
+		    	    data.addColumn('number', 'Data based on skill and level');
+		    	    options.hAxis.viewWindow.min = 0;
+		            options.hAxis.viewWindow.max = 5;
+		            $("#dynamic tbody").remove();
+	    	    	$('#tableHeading').html("Criteria: ");
+		            if(res[0].length>0){
+		    	    	for(var i=0; i<res[0].length;i++){
+
+				    		data.addRow([res[0][i]["criteria"], parseInt(res[0][i]["totalEmp"])]);
+				    	}
+		    	    	var idArry = new Array();
+						var index = 0;
+						var count = 0;
+		    	    	for(var j=0; j<res[1].length;j++){
+							if($.inArray(res[1][j]['criteria'],idArry)==-1){
+								var txt = res[1][j]['criteria'].replace(/\./g,"");
+								var nameArr = txt.split(' ');
+								var name = nameArr.join('_');
+
+		    	    			$("#dynamic").append("<tbody id='tbodyId_"+(count)+"' name='"+name+"'role='alert' aria-live='polite' aria-relevant='all' style='display:none;' class='tblData'></tbody>");
+		    	    			idArry[count] = res[1][j]['criteria'];
+		    	    			$("#tbodyId_"+count).append("<tr class='gradeA'><td>"+res[1][j]['firstname']+' '+res[1][j]['lastname']+"</td><td>"+res[1][j]['position']+"</td><td>"+res[1][j]['expYears']+' Year(s) '+res[1][j]['expMonths']+' Month(s)'+"</td><td class='txtcenter'><a rel='shadowbox;height=350;width=700' href='/admin/skilldetail/?userId="+res[1][j]['userId']+"' onclick='Shadowbox.open(this);	return false;' class='btn btn-small'><i class='icon-businessCard'></i></a></td></tr>");
+		    	    			count = count+1;
+							}else{
+								index = $.inArray(res[1][j]['criteria'],idArry);
+								$("#tbodyId_"+index).append("<tr class='gradeA'><td>"+res[1][j]['firstname']+' '+res[1][j]['lastname']+"</td><td>"+res[1][j]['position']+"</td><td>"+res[1][j]['expYears']+' Year(s) '+res[1][j]['expMonths']+' Month(s)'+"</td><td class='txtcenter'><a rel='shadowbox;height=350;width=700' href='/admin/skilldetail/?userId="+res[1][j]['userId']+"' onclick='Shadowbox.open(this);	return false;' class='btn btn-small'><i class='icon-businessCard'></i></a></td></tr>");
+							}
+				    	}
+		    	    	$(".dTable tbody tr:nth-child(2n)").addClass("even");
+		    	    }else{
+		    	    	data.addRow(['', 0]);
+		    	    }
+			    	google.visualization.events.addListener(chart, 'ready',
+			                function() {
+			                  prevButton.disabled = options.hAxis.viewWindow.min <= 0;
+			                  nextButton.disabled = options.hAxis.viewWindow.max >= data.getNumberOfRows();
+			                  if(data.getNumberOfRows()>5)
+			                  	changeZoomButton.disabled = false;
+			        });
+			    	var zoomed = false;
+			    	if(data.getNumberOfRows()<5){
+			    		zoomed = true;
+			    	}
+			        changeZoomButton.onclick = function() {
+			          if (zoomed) {
+			            options.hAxis.viewWindow.min = 0;
+			            options.hAxis.viewWindow.max = 5;
+			            $("#zoomBtn i").removeClass("icon-zoom-out");
+			          } else {
+			            options.hAxis.viewWindow.min = 0;
+			            options.hAxis.viewWindow.max = data.getNumberOfRows();
+			            $("#zoomBtn i").addClass("icon-zoom-out");
+			          }
+			          zoomed = !zoomed;
+			          drawChart();
+			        }
+			        $('#visualization, div.chartAction').css({'opacity':'1','filter':'alpha(opacity=100)'});
+			    	drawChart();
+		    	}
+			});
+    }
+    drawChart();
+  }
+google.setOnLoadCallback(init);
+</script>
+<div class="row-fluid show-grid whpanel-bordered">
+    <h4 class="headerTitle">View employee stats</h4>
+	<form id="filterForm" action="/admin/viewstats" method="post" class="span11 form-inline">
+  		 <div class="row">
+			<label for="name" class="span1 txtright">Skill:</label>
+
+			<?php $this->filterForm->skill->setAttrib('id', 'skill')->setAttrib('multiple','multiple')->setAttrib('class','span4');
+				foreach($this->skill AS $skill){
+					$this->filterForm->skill->addMultiOption($skill['skillId'], $skill['skillName']);
+				}
+				echo $this->filterForm->skill->renderViewHelper();
+			?>
+
+			<label for="name" class="span1 txtright">Level:</label>
+
+			<?php $this->filterForm->level->setAttrib('id', 'level')->setAttrib('multiple','multiple')->setAttrib('class','span4');
+				foreach($this->level AS $level){
+					$this->filterForm->level->addMultiOption($level['levelId'], $level['levelName']);
+				}
+				echo $this->filterForm->level->renderViewHelper();
+			?>
+            <button type="button" id="draw" class="btn" style="margin:0 0 0 20px">Draw chart</button>
+            </div>
+        <!-- <div class="row">
+			<label for="name" class="span1">Project</label>
+
+			<?php $this->filterForm->project->setAttrib('id', 'project')->setAttrib('multiple','multiple')->setAttrib('class','span4');;
+				foreach($this->project AS $project){
+					$this->filterForm->project->addMultiOption($project['projectId'], $project['projectName']);
+				}
+				echo $this->filterForm->project->renderViewHelper();
+			?>
+	        </div>
+	        <div class="row">
+					<button type="button" id="" class="btn offset1 disabled">Draw chart</button>
+        	</div> -->
+  	</form>
+  	<div class="clear"></div>
+	<div class="row-fluid show-grid panel viewpanel">
+	    <span class="span12">
+	      	<div class="row-fluid">
+		        <div class="fluid-half" >
+		              <div class="span12">
+		                <h2>Visualization Graph</h2>
+		               <div class="btn-toolbar chartAction">
+		                   <div class="actions">
+		                      <button type="button" id="nxtBtn" class="btn"><i class="icon-chevron-right"></i></button>
+		                      <button type="button" id="prevBtn" class="btn"><i class="icon-chevron-left"></i></button>
+		                      <button type="button" id="zoomBtn" class="btn"><i class="icon-zoom-in"></i></button>
+		                   </div>
+		              </div>
+		              <div class="visualPanel"><div id="visualization" class="wrap-bordered" style="width:100%; height: 400px;"></div></div>
+		           </div>
+		        </div>
+	        	<div class="fluid-half" >
+	        		<div class="span12">
+	       			  	<h2>Visualization Table</h2>
+	                  	<div style="padding:0 10px 10px 10px;" id="tableData">
+		                  	<h1 id="tableHeading">Criteria: </h1>
+		                  	<table cellspacing="0" cellpadding="0" border="0" id="dynamic" class="dTable dataTable table-bordered" aria-describedby="dynamic_info">
+		                    	<thead>
+					            	<tr role="row">
+						            	<th>Employee Name</span></th>
+							            <th>Designation</th>
+							            <th>Experience</th>
+							            <th width="68px">&nbsp;</th>
+						        	</tr>
+				           		</thead>
+				        	</table>
+	             		</div>
+	         		</div>
+	        	</div>
+	    	</div>
+		</span>
+	</div>
+</div>

@@ -1,0 +1,54 @@
+<script type="text/javascript">
+function validateteamLeadForm(form){
+	var validatePass = true;
+	if($.trim($("#"+form+" #position").val())=='' || $("#"+form+" #position").val()==null){
+		$("#position").focus();
+		validatePass = false;
+	}
+	if(!validatePass)
+	{
+		alert("Please Select atleast one position");
+		return false;
+	}
+}
+$(document).ready(function() {
+	$('select').each(function(){
+		var id=$(this).attr('id');
+		$("#"+id).select2();
+	});
+});
+</script>
+<h1 class="headbrd">Delete Team Lead <?=$this->teamLead->getFirstName();?> <?=$this->teamLead->getLastName();?></h1>
+<form class="teamLeadForm" id="teamLeadForm" action="/admin/deleteteamlead/teamleadId/<?=$this->teamLead->getUserId();?>" method="post" onsubmit="return validateteamLeadForm('teamLeadForm')">
+	  <?php  if(!empty($this->positions)){?>
+	 <div class="profileheadbox role">
+		<p class="firstName formfield">
+			<label for="Postion" class="span4"> Select New Position  </label>
+				<select   class="span4" name="position" id="position">
+				<option value="">Select Position </option>
+				<?php foreach($this->positions as $position){
+				 echo "<option value=".$position->getPositionId().">".$position->getPosition()."</option>";
+
+				}?>
+				</select>
+		</p>
+        <div class="clear"></div>
+	</div>
+	<table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+	<tbody>
+			<tr class="profilefooterbox" style="float:none;">
+				<td class="text-right" colspan="3" style="padding:8px 10px">
+	        		<input type="submit" name="Submit" value="delete" class="btn btn-primary btn-small">
+                    <a class="btn btn-small" href="/admin/manageteam">Cancel</a>
+				</td>
+        	</tr>
+        	<?php } else {?>
+        	<tr class="profilefooterbox" style="float:none;">
+				<td class="text-right" colspan="3" style="padding:8px 10px">
+	        		<div>No Position is Remaining to Assign</div><br>
+                    <a class="btn btn-small" href="/admin/manageteam">Back</a>
+				</td>
+        	</tr>
+        	<?php } ?>
+	</tbody>
+</table>

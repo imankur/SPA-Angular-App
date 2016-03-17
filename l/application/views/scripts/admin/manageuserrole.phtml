@@ -1,0 +1,42 @@
+<script>
+$(document).ready(function() {
+<?php if($this->msg !='') {?>
+	$("#msg").html("<?php echo $this->msg; ?>");
+	<?php } ?>
+});
+
+
+</script>
+
+<div class="headTitle">
+	    <h1 class="headbrd">Manage User Roles</h1>
+	     <div class="profileimg col_6 fleft">
+	    	<p id="msg" style="color:#54C571;"></p>
+	    </div>
+</div>
+<table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+	<thead>
+		<tr>
+			<td class=" profileaside txtleft" width="25%"><label>Name</label></td>
+			<td class=" profileaside" width="25%"><label>Designation</label></td>
+			<td class=" profileaside" width="25%"><label>Roles</label></td>
+			<td class=" profileaside" width="10%"><label>Edit</label></td>
+			<!-- <td class=" profileaside" width="15%"><label>Experience (Months)</label></td>
+			<td class=" profileaside" width="35%"><label>Project</label></td>
+			<td class=" profileaside" width="5%"><label>Verified</label></td> -->
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		foreach ($this->userRole as $userId => $userRole){
+		?>
+			<tr>
+				<td class="span2 profileaside txtleft"><?=$userRole['name'];?></td>
+				<td class="span2 profileaside txtcenter"><?=$userRole['designation'];?></td>
+				<td class="span2 profileaside txtleft"><?php if(isset($userRole['role'])) echo implode(', ', $userRole['role']);?></td>
+            	<td class="span2 profileaside txtcenter"><a href="/admin/edituserrole/userId/<?=$userId?>">Edit</a></td>
+			</tr>
+		<?php }?>
+	</tbody>
+</table>
+ <a class="btn btn-small" style="float:right;margin-bottom:100px;" href="/admin/managerolepermission">Back</a>

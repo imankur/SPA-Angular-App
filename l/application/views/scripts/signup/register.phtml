@@ -1,0 +1,99 @@
+<?php
+$errors = $this->zendFormErrorFormatter($this->registerForm->getMessages());
+?>
+<script src="/scripts/signup.js"></script>
+  <link rel="stylesheet" href="/styles/signup.css" type="text/css" />
+  <link rel="stylesheet" href="/styles/demo.css" type="text/css" />
+<div id="right">
+<div id="registration">
+
+ <form id="RegisterUserForm" action="/signup/register" method="post">
+ 	<fieldset>
+ 	<h2>Create an Account</h2>
+        <div class="frmelement">
+         <p>
+            <span for="firstName" class="label">First Name</span>
+            <label for="firstName">First Name</label>
+            <?php
+				$this->registerForm->firstName->setAttrib('id', 'firstName')->setAttrib('class', 'text');
+				echo $this->registerForm->firstName->renderViewHelper();
+			?>
+			<span id="invalid_firstname" class="error_text"><?php echo isset($errors['firstName']) ?$errors['firstName'] : ""?></span>
+         </p>
+         <p>
+            <span for="lastName" class="label">Last Name</span>
+            <label for="lastName">Last Name</label>
+            <?php
+				$this->registerForm->lastName->setAttrib('id', 'lastName')->setAttrib('class', 'text');
+				echo $this->registerForm->lastName->renderViewHelper();
+			?>
+			<span id="invalid_lastname" class="error_text"><?php echo isset($errors['lastName']) ?$errors['lastName'] : ""?></span>
+         </p>
+        </div>
+        <div class="frmelement">
+            <p style="width: 100%">
+            <span for="email" class="label">Email</span>
+            <label for="email">Email</label>
+            <?php
+				$this->registerForm->email->setAttrib('id', 'email')->setAttrib('class', 'text');
+				echo $this->registerForm->email->renderViewHelper();
+			?>
+			@synergytechservices.com
+			<span id="invalid_email" class="error_text"><?php echo isset($errors['email']) ?$errors['email'] : ""?></span>
+         </p>
+       
+        </div>
+        <div class="frmelement">
+        	  <p>
+            <span for="tel" class="label">Phone Number</span>
+            <label for="tel">Phone Number</label>
+            <?php
+				$this->registerForm->tel->setAttrib('id', 'tel')->setAttrib('class', 'text');
+				echo $this->registerForm->tel->renderViewHelper();
+			?>
+			<span id="invalid_tel" class="error_text"><?php echo isset($errors['tel']) ?$errors['tel'] : ""?></span>
+         </p>
+         <p>
+            <span for="empId" class="label">Employee ID</span>
+            <label for="empId">Employee ID</label>
+            <?php
+				$this->registerForm->empId->setAttrib('id', 'empId')->setAttrib('class', 'text');
+				echo $this->registerForm->empId->renderViewHelper();
+			?>
+			<span id="invalid_empId" class="error_text"><?php echo isset($errors['empId']) ?$errors['empId'] : ""?></span>
+         </p>
+        </div>
+        <div class="frmelement">
+        <p>
+            <span for="password" class="label">Password</span>
+            <label for="password">Password</label>
+            <?php
+				$this->registerForm->password->setAttrib('id', 'password')->setAttrib('class', 'text');
+				echo $this->registerForm->password->renderViewHelper();
+			?>
+			<span id="invalid_password" class="error_text"><?php echo isset($errors['password']) ?$errors['password'] : ""?></span>
+         </p>
+
+         <p>
+            <span for="passwordConfirm" class="label">Confirm Password</span>
+            <label for="passwordConfirm">Confirm Password</label>
+            <?php
+				$this->registerForm->passwordConfirm->setAttrib('id', 'passwordConfirm')->setAttrib('class', 'text');
+				echo $this->registerForm->passwordConfirm->renderViewHelper();
+			?>
+			<span id="invalid_passwordConfirm" class="error_text"><?php echo isset($errors['passwordConfirm']) ?$errors['passwordConfirm'] : ""?></span>
+         </p>
+        </div>
+        <div class="frmelement">
+		<p class="submit">
+			<?php
+				$this->registerForm->register->setLabel('Register')->setAttrib('onclick','return validatePhone()');
+				echo $this->registerForm->register->renderViewHelper();
+			?>
+		</p>
+        </div>
+ 	</fieldset>
+
+ </form>
+</div>
+</div>

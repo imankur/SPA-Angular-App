@@ -1,0 +1,45 @@
+<?php
+$userSkillDetail = $this->user->getUserSkillDetail();
+?>
+ <h4 class="headerTitle"><?=$this->user->getFirstName()." ".$this->user->getLastName();?></h4><br>
+ <table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+       <thead>
+       <tr>
+         <td class="lightgray" width="15%"><label>Skill name</label></td>
+         <td class="lightgray" width="15%"><label>Last used</label></td>
+         <td class="lightgray" width="13%"><label>Skill level</label></td>
+         <td class="lightgray" width="17%"><label>Experience (Months)</label></td>
+         <td class="lightgray" width="30%"><label>Projects</label></td>
+         <td class="lightgray" width="10%"><label>Verified</label></td>
+       </tr>
+       </thead>
+       <tbody>
+       	<?php
+		if(count($userSkillDetail)>0){
+			foreach($userSkillDetail as $userSkill){?>
+          <tr class="<?= in_array($userSkill->getUserSkillsDetailId(), $this->changedField['skill']) && $userSkill->getIsVerified()!=1 ? 'edited' : ''; ?>">
+          	<td class="txtcenter"><?=$userSkill->getSkill()->getSkillName();?></td>
+            <td class="txtcenter"><?=$userSkill->getLastUsedMonth()." ".$userSkill->getLastUsedYear();?></td>
+            <td class="txtcenter"><?=$userSkill->getLevel()->getLevelName();?></td>
+            <td class="txtcenter"><?=$userSkill->getExpMonths();?></td>
+            <td class="txtcenter">
+            	<?php $prjctDtlArr = array();
+					foreach ($userSkill->getProjectDetail() as $projectDetails){
+						$prjctDtlArr[] = $projectDetails->getProject()->getProjectName();
+					}
+					echo implode(', ', $prjctDtlArr);
+				?>
+            </td>
+            <td class="txtcenter"><img src="<?php echo $userSkill->getIsVerified() ? '/images/green_check.png' : '/images/restricted.png';?>"/></td>
+          </tr>
+          <?php }
+		}else{?>
+			 <tr class="">
+              <td class="profileaside" colspan="6">
+                <p align="center" class="noskill">No Skills added yet</p>
+               </td>
+             </tr>
+
+		<?php }?>
+       </tbody>
+     </table>

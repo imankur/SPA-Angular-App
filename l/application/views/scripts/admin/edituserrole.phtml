@@ -1,0 +1,65 @@
+<script type="text/javascript">
+function validateUserRoleForm(form){
+	var validatePass = true;
+	if($('.check:checked').size()==0){
+		$("#msg").html("Please select at least one checkbox");
+		validatePass = false;
+	}
+	if(!validatePass)
+		return false;
+}
+$("#selectAll").live('click', function () {
+	$("#msg").html("");
+	var checked = this.checked;
+	$('.check').each(function(){
+		if(($(this).attr('disabled'))== undefined){
+			$(this).attr('checked', checked);
+		}
+	});
+});
+$(".check").live('click',function(){
+	$("#msg").html("");
+	 if($(".check").length == $(".check:checked").length) {
+	        $("#selectAll").attr("checked", "checked");
+	        $("#selectAll").parent().addClass('checked');
+	    } else {
+	        $("#selectAll").removeAttr("checked");
+	        $("#selectAll").parent().removeClass('checked');
+	    }
+});
+</script>
+<div class="headTitle">
+	    <h1 class="headbrd">Edit roles for "<?=$this->user->getFirstName()." ".$this->user->getLastName() ?>"</h1>
+	     <p id="msg" style="color:#A52A2A;"></p>
+</div>
+<form name="edituserrole" id="edituserrole" method="post" action="/admin/edituserrole/userId/<?=$this->user->getUserId();?>" onsubmit="return validateUserRoleForm('edituserrole')">
+	<table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+		<thead>
+			<tr>
+				<td class=" profileaside txtleft" width="5%"><input type="checkbox" id="selectAll"></td>
+				<td class=" profileaside txtleft" width="20%"><label>Role Id</label></td>
+				<td class=" profileaside txtleft" width="60%"><label>Role</label></td>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+			foreach ($this->roles as $role){
+			?>
+				<tr>
+					<td class="profileaside txtcenter"><input class="check" type="checkbox" name="roles[]"
+						value="<?=$role->getRoleId();?>" <?php echo in_array($role->getRoleId(), $this->selectedRoles) ? 'checked="checked"' : '';
+					echo $role->getRoleId() == 6 ? 'disabled="disabled"' : '';?>>
+					</td>
+	            	<td class="span2 profileaside txtleft"><?=$role->getRoleId();?></td>
+	            	<td class="span2 profileaside txtleft"><?=$role->getRoleName();?></td>
+				</tr>
+			<?php }?>
+		</tbody>
+</table>
+<div class="fg-toolbar tableFooter" id="tableFooter">
+	<div class="right">
+		<input class="btn btn-primary btn-small" type="submit" name="submit" value="Submit">
+		<a class="btn btn-small" href="/admin/manageuserrole">Cancel</a>
+	</div>
+</div>
+</form>

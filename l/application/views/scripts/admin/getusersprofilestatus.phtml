@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="/styles/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<script src="/scripts/modalwindow/shadowbox.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	function SBopen() {
+	    document.body.style.overflow = "hidden";
+	    document.body.style.padding = "0 17px 0 0";
+	}
+	function SBclose() {
+	    document.body.style.overflow = "auto";
+	    document.body.style.padding = "0";
+	}
+	Shadowbox.init({
+	    onOpen: SBopen,
+	    onClose: SBclose
+	});
+	$('#export').click(function() {
+		window.location.href='/admin/getcsvfile/';
+	});
+});
+</script>
+<div class="headTitle">
+	    <h1 class="headbrd">Users Profile Status <button id="export" class="btn btn-default" style="float:right;margin: 0 -37px 20px 0px;"	type="button" >Export</button></h1>
+
+</div>
+<table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+	<thead>
+		<tr>
+			<td class=" profileaside" width="25%"><label>Name</label></td>
+			<td class=" profileaside" width="25%"><label>Profile Status</label></td>
+			<td class=" profileaside" width="25%"><label>Skills Added</label></td>
+		</tr>
+	</thead>
+	<tbody>
+		<?php
+		foreach ($this->userProfileStatusArray as $userProfileStatus){
+
+		?>
+			<tr>
+				<td class="span2 profileaside "><a href="/admin/viewemployeedetail/id/<?=$userProfileStatus['ID'];?>"  rel="shadowbox;height=450;width=900"><?=$userProfileStatus['Name'];?></a></td>
+				<td class="span2 profileaside txtcenter "><?=$userProfileStatus['Profile Percentage'].'%';?></td>
+				<td class="span2 profileaside txtcenter"><?=$userProfileStatus['Skills']?></td>
+			</tr>
+		<?php }?>
+	</tbody>
+</table>
+<?php  echo $this->paginationControl($this->userProfileStatusArray,'Sliding','pagination.phtml');?>

@@ -1,0 +1,92 @@
+<link rel="stylesheet" href="/styles/shadowbox.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<script src="/scripts/modalwindow/shadowbox.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+function SBopen() {
+    document.body.style.overflow = "hidden";
+    document.body.style.padding = "0 17px 0 0";
+}
+function SBclose() {
+    document.body.style.overflow = "auto";
+    document.body.style.padding = "0";
+}
+Shadowbox.init({
+    onOpen: SBopen,
+    onClose: SBclose
+});
+
+$(document).ready(function(){
+	$(".toggle_container").hide();
+	$("h2.expand_heading").click(function(){
+		var id = $(this).attr('id');
+		$('.expand_heading').each(function(){
+			if($(this).attr(id)!=id)
+				$(this).next(".toggle_container").slideUp("slow");
+		});
+		if(!$("#"+id).hasClass('loaded')){
+			$.ajax({
+				  url: "/admin/viewnotification/id/"+id.replace("viewnotification_", ""),
+				  success: function(data) {
+					  $("#"+id).removeClass('new');
+					  $("#"+id).addClass('loaded');
+				  },
+				  error:function(data){
+				  }
+			});
+		}
+		if ($(this).next(".toggle_container").css('display') == 'none') 
+			$(this).next(".toggle_container").slideDown("slow");
+	    else
+	    	$(this).next(".toggle_container").slideUp("slow");
+	});
+});
+</script>
+	<div class="expand_wrapper">
+	<?php foreach ($this->activityList as $activity){
+		$title = $activity->getUser()->getFirstName()." ".$activity->getUser()->getLastName()." Updated his/her profile";
+		$h3Content = $activity->getUser()->getFirstName()." ".$activity->getUser()->getLastName()." Updated following details in his/her profile";
+		if($activity->getActivityType()=='registration'){
+			$title = $activity->getUser()->getFirstName()." ".$activity->getUser()->getLastName()." Created his/her profile";
+			$h3Content = $activity->getUser()->getFirstName()." ".$activity->getUser()->getLastName()." has just created his/her profile.";
+		}
+		$textDecorator = ($activity->getIsOpened()==0) ? 'new' :'';
+	?>
+			<h2 class="expand_heading <?=$textDecorator?>" id="viewnotification_<?=$activity->getActivityId()?>"><a href="#"><?=$title?></a></h2>
+
+			<div class="toggle_container">
+				<div class="box">
+					<h3><?=$h3Content?></h3>
+					<ul class="bullet">
+					<?php if($activity->getActivityType()=='update'){
+							$field = array();
+							if(isset($this->changedField[$activity->getActivityId()]['contactDetails'])){
+								foreach ($this->changedField[$activity->getActivityId()]['contactDetails'] as $changedContact){
+									if(!in_array($this->fields[$changedContact], $field)){?>
+										<li>
+											<?=$this->fields[$changedContact];?>
+										</li>
+								<?php }
+								$field[] = $this->fields[$changedContact];
+								}
+							}
+							if(isset($this->changedField[$activity->getActivityId()]['skill'])){
+								foreach ($this->changedField[$activity->getActivityId()]['skill'] as $changedContact){
+									if(!in_array($this->fields['skill'], $field)){?>
+										<li>
+											<?=$this->fields['skill'];?>
+										</li>
+								<?php }
+									$field[] = $this->fields['skill'];
+								}
+							}
+						}?>
+					</ul>
+					<p>You can view details or manage activities of <b><?=$activity->getUser()->getFirstName()." ".$activity->getUser()->getLastName()?></b> using following Link.</p>
+					<p class="example-item" id="">
+						<a href="/admin/viewemployeedetail/id/<?=$activity->getUser()->getUserId()?>" class="btn btn-primary btn-small" rel="shadowbox;height=450;width=900">View Details</a>
+						<a href="/admin/employeeactivity/userId/<?=$activity->getUser()->getUserId()?>" class="btn btn-primary btn-small">Manage</a>
+					</p>
+				</div>
+			</div>
+		<?php }?>
+	</div>
+	<?php  echo $this->paginationControl($this->activityList,'Sliding','pagination.phtml');?>

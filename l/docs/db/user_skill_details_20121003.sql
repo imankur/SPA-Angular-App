@@ -1,0 +1,1 @@
+ALTER TABLE `resource_management`.`user_skills_detail` ADD COLUMN `is_verified` BIGINT UNSIGNED AFTER `date_updated`;

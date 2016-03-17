@@ -1,0 +1,25 @@
+<div class="lead"><?php echo $this->uName;?><div class="pull-right"><?php echo $this->date;?></div></div>
+<?php if(empty($this->DetailsArr)) { ?>
+<div>No Entries found for <?php echo $this->date;?>  </div>
+<?php } else{ ?>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>Entry time</th>
+			<th>Exit time</th>
+			<th>Total time spent</th>
+			<th>Total time out</th>
+		</tr>
+	</thead>
+	<tbody>
+	<?php foreach($this->DetailsArr as $row){?>
+		<tr>
+			<td><?php echo $row['Entry']?></td>
+			<td><?php echo $row['Exit']?></td>
+			<td><?php echo $row['TimeSpent']?></td>
+			<td><?php echo $row['TimeOut']?></td>
+		</tr>
+	<?php }?>
+	</tbody>
+</table>
+<?php } ?>

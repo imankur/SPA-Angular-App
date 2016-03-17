@@ -1,0 +1,111 @@
+<script type="text/javascript">
+function selectAll()
+{
+    selectBox = document.getElementById("selectedUser");
+    for (var i = 0; i < selectBox.options.length; i++)
+    {
+         selectBox.options[i].selected = true;
+    }
+    return true;
+}
+function check(){
+	$("#msg").html("");
+	if($('#selectedUser :options').size()==0){
+		$("#msg").html("Please select at least one employee");
+		return false;
+	}else{
+		return true;
+	}
+}
+$(document).ready(function() {
+
+	var selectUser_options = $("#selectUser option");
+
+	selectUser_options.sort(function(a,b) {
+	    if (a.text > b.text) return 1;
+	    else if (a.text < b.text) return -1;
+	    else return 0
+	})
+
+	$("#selectUser").empty().append( selectUser_options );
+	var selectedUser_options = $("#selectedUser option");
+
+	selectedUser_options.sort(function(a,b) {
+	    if (a.text > b.text) return 1;
+	    else if (a.text < b.text) return -1;
+	    else return 0
+	})
+
+	$("#selectedUser").empty().append( selectedUser_options );
+
+	$('#add').click(function() {
+		$("#msg").html("");
+		if($('#selectUser :selected').size()==0)
+			$("#msg").html("Please select at least one employee");
+		$('#selectedUser').append($('#selectUser :selected'));
+		$('#selectedUser :selected').each(function(i, selected){
+			   $(selected).attr("selected",false);
+			});
+	});
+	$('#remove').click(function() {
+		$("#msg").html("");
+		if($('#selectedUser :selected').size()==0)
+			$("#msg").html("Please select at least one employee");
+		$('#selectUser').append($('#selectedUser :selected'));
+
+	});
+});
+</script>
+<div class="headTitle" >
+	<h1 class="headbrd">Edit Users for <?=$this->teamLead->getFirstName();?> <?=$this->teamLead->getLastName();?></h1>
+	<p id="msg" style="color:#A52A2A;"></p>
+</div>
+<form name="teamuser" id="teamForm"
+	action="/admin/editteamusers/teamleadId/<?=$this->teamLead->getUserId();?>"
+	method="post" onsubmit="return check()">
+	<table class="profileDetails table table table-striped "
+		cellpadding="0" cellspacing="1" width="100%">
+	<thead>
+			<tr>
+				<td width="45%">Select Users</td>
+				<td width="10%"><label>&nbsp</label></td>
+				<td width="45%">Selected Users</td>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td style="vertical-align: middle; text-align: center;"><select
+					class="span4" multiple size="15" id="selectUser">
+						<?php
+							foreach($this->users as $user){
+								echo "<option value=" . $user->getUserId() . ">" . $user->getFirstName() . " " . $user->getLastName() . "</option>";
+
+							}
+						?>
+					</select></td>
+				<td style="vertical-align: middle; text-align: center;"><input
+					type="button" id="add" name="Add" value=">>" class="btn  btn-small"><br>
+				<br>
+				<input type="button" id="remove" name="Remove" value="<<" class="btn btn-small"></td>
+
+				<td style="vertical-align: middle; text-align: center;"><select
+					class="span4" multiple size="15" id="selectedUser"
+					name="selectedUser[]">
+						<?php
+							foreach($this->selectedUsersIdArr as $user){
+								echo "<option value=" . $user->getUserId() . ">" . $user->getFirstName() . " " . $user->getLastName() . "</option>";
+
+							 }
+							?>
+					</select></td>
+			</tr>
+			<tr class="profilefooterbox" style="float: none;">
+				<td class="text-right" colspan="3" style="padding: 8px 10px"><input
+					type="submit" name="Submit"   onclick="selectAll()"   value="Submit" class="btn btn-primary btn-small"> <a
+					class="btn btn-small" href="/admin/manageteam">Cancel</a></td>
+			</tr>
+
+
+	</tbody>
+	</table>
+</form>

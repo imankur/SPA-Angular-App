@@ -1,0 +1,53 @@
+<script>
+$(document).ready(function() {
+<?php if($this->msg !='') {?>
+	$("#msg").html("<?php echo $this->msg; ?>");
+	<?php } ?>
+});
+
+
+</script>
+<div class="headTitle">
+	    <h1 class="headbrd">Manage Team</h1>
+	    <div class="profileimg col_6 fleft">
+	    	<p id="msg" style="color:#54C571;"></p>
+	    </div>
+</div>
+<p class=" profileaside inlineList txtright">
+<!-- <a href="/admin/manageuserrole">Manage User Roles</a> -->
+<a href="/admin/addteamlead">Add New</a>
+</p>
+
+<table class="profileDetails table table table-striped table-bordered" cellpadding="0" cellspacing="1" width="100%">
+<?php if(!empty($this->TeamLeads)){?>
+	<thead>
+		<tr>
+			<td class=" profileaside txtleft" width="12%"><label>Name </label></td>
+			<td class=" profileaside txtleft" width="12%"><label>Position </label></td>
+			<td class=" profileaside" width="15%"><label>Manage Team</label></td>
+			<td class=" profileaside" width="15%"><label>Delete</label></td>
+		</tr>
+	</thead>
+	<tbody>
+		<?php $count = 1;
+		foreach ($this->TeamLeads as $Teamlead){
+		?>
+			<tr>
+				<td class="span2 profileaside txtleft"><?php echo $Teamlead->getUser()->getFirstName()." ".$Teamlead->getUser()->getLastName() ;?></td>
+
+				<td class="span2 profileaside txtleft"><?php echo $Teamlead->getUser()->getUserDetail()->getPosition()->getPosition() ;?></td>
+
+            	<td class="span2 profileaside txtcenter"><a href="/admin/editteamusers/teamleadId/<?php echo $Teamlead->getUser()->getUserId()?>">Manage Team</a></td>
+
+            	<td class="span2 profileaside txtcenter"><a href="/admin/deleteteamlead/teamleadId/<?php echo $Teamlead->getUser()->getUserId()?>" onclick="return confirm('Are you sure, you want to delete?');">Delete</a></td>
+			</tr>
+		<?php }?>
+		<?php } else{ ?>
+		<tr class="profilefooterbox" style="float:none;">
+				<td class="text-right" colspan="3" style="padding:8px 10px">
+	        		<div>No Data Found</div><br>
+				</td>
+        	</tr>
+	<?php }?>
+	</tbody>
+</table>

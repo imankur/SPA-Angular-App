@@ -1,0 +1,74 @@
+<?php
+$errors =  $this->form->getMessages();
+$loginErrors =  $this->form->getErrorMessages();
+?>
+<script type="text/javascript">
+$(document).ready(function(){
+	$('a[title]').qtip({
+		position: {
+			corner: {
+				target: 'rightTop', tooltip: 'leftBottom'
+		    }
+		},
+		style: {
+			name: 'dark',  // cream dark  green light  red  blue
+		    padding: '7px 13px',
+		    width: {
+		    	max: 210,
+		        min: 0
+		    },
+			border: {
+				width: 4,
+			    radius: 6
+			},
+			tip: true
+		}
+	});
+});
+
+var txt="";
+$("#username, #password").live("focus",function() {
+	txt=$(this).attr("placeholder");
+	$(this).attr("placeholder",""); 
+});
+$("#username, #password").live("blur",function() {
+	if($(this).attr("placeholder") == "") {
+		$(this).attr("placeholder",txt);
+	}
+});
+
+$('#username').live('blur',function(){
+	var username = $(this).val().trim().split('@');
+	$(this).val(username[0]);
+});
+</script>
+	<form class="form logfrm" action="/login/login" method="post">
+	 <p class="profile txtcenter"> 
+       <span class="image">login</span>
+    </p>
+	<span id="invalid_login" class="error_text block"><?php echo isset($loginErrors[0]) ? $loginErrors[0] : ""?></span>
+		<p class="name formfield">
+			<?php
+				$this->form->username->setAttrib('id', 'username')->setAttrib('placeholder','Enter username')->setAttrib('class', 'span3');
+				echo $this->form->username->renderViewHelper();
+			?>
+			<a href="javascript:void(0)" title="Your official username." class="tooltip_note question">question</a>
+			<span id="invalid_username" class="displayblock error_text"><?php echo isset($errors['username']) ? $errors['username']['isEmpty'] : ""?></span>
+		</p>
+		<p class="email formfield" >
+			<!-- <label for="email"><?php echo $this->translate->_('Password');?></label>&nbsp;&nbsp; -->
+			<?php
+				$this->form->password->setAttrib('id', 'password')->setAttrib('placeholder','Enter password')->setAttrib('class', 'span3');
+				echo $this->form->password->renderViewHelper();
+			?>
+			<a href="javascript:void(0)" title="Your official password." class="tooltip_note question">question</a>
+			<span id="invalid_password" class="displayblock error_text"><?php echo isset($errors['password']) ? $errors['password']['isEmpty'] : ""?></span>
+		</p>
+		<p class="left">
+			<span class="remember"><input type="checkbox" name="remember" id="remember"/><span class="left">Remember me</span></span>
+			<?php
+				$this->form->login->setLabel('Login')->setAttrib('class','btn btn-primary fright');
+				echo $this->form->login->renderViewHelper();
+			?>
+		</p>
+	</form>

@@ -1,0 +1,190 @@
+<script type="text/javascript">
+
+function check(){
+	$("#msg").html("");
+	if($('.check:checked').size()==0){
+		$("#msg").css("color","#A52A2A");
+		$("#msg").html("Please select at least one checkbox");
+		return false;
+	}else
+		return true;
+}
+$("#selectAll").live('click',function () {
+	$("#msg").html("");
+    $('.check').attr('checked', this.checked);
+    if($(this).parent().hasClass('checked'))
+		$(this).parent().removeClass('checked');
+	else{
+		$(this).parent().addClass('checked');
+	}
+
+    if($(this).parent().hasClass('checked'))
+		$('.check').parent().addClass('checked');
+	else
+		$('.check').parent().removeClass('checked');
+});
+
+$(".check").live('click',function(){
+	$("#msg").html("");
+	 if($(".check").length == $(".check:checked").length) {
+	        $("#selectAll").attr("checked", "checked");
+	        $("#selectAll").parent().addClass('checked');
+	    } else {
+	        $("#selectAll").removeAttr("checked");
+	        $("#selectAll").parent().removeClass('checked');
+	    }
+	if($(this).parent().hasClass('checked')){
+		$(this).parent().removeClass('checked');
+		$(this).removeAttr("checked");
+	}
+	else{
+		$(this).attr("checked", "checked");
+		$(this).parent().addClass('checked');
+	}
+});
+$(document).ready(function(){
+	$("#msg").html("");
+	$('div.checker').hide();
+	$('#tableFooter').hide();
+	$(".dTable tbody tr:nth-child(2n)").addClass("even");
+});
+$(".hiddenpars > a").addClass("minus");
+$(".hiddenpars .tOptions").live("click", function() {
+	  if($(".tablePars").css("display")=="block"){
+		 $(".tablePars").slideUp("slow");
+		 $(".hiddenpars > a").removeClass("minus");
+	  }
+	 else{
+		 $(".hiddenpars > a").addClass("minus");
+		 $(".tablePars").slideDown("slow");
+	 }
+});
+var availableEmployees = [ <?php foreach ( $this->employee as $empData ){?>{ FirstName : '<?php echo $empData->getFirstName();?>',LastName : '<?php echo $empData->getLastName();?>',Designation : '<?php if(count($empData->getUserDetail())>0){ echo $empData->getUserDetail()->getPosition()->getPosition();}?>',userId :'<?php echo $empData->getUserId();?>'}, <?php }?> ];
+function searchEmployee(value){
+	if(value!=' '){
+		value=value.trim();
+
+	$(".dTable tbody tr").removeClass("even");
+	 var counter = 0;
+	   for(var i=0;i<availableEmployees.length;i++){
+		   var index = availableEmployees[i].FirstName.toUpperCase().indexOf(value.toUpperCase());
+		   //var designationIndex = availableEmployees[i].Designation.toUpperCase().indexOf(value.toUpperCase()); if search requires designation, add this to if
+		   var lastNameIndex = availableEmployees[i].LastName.toUpperCase().indexOf(value.toUpperCase());
+		   if(index > -1 || lastNameIndex > -1){
+
+			   $('#row_'+availableEmployees[i].userId).css("display","table-row");
+			   if(counter%2!=0)
+					$('#row_'+availableEmployees[i].userId).addClass('even');
+			    counter++;
+		   }
+		   else{
+
+			   $('#row_'+availableEmployees[i].userId).css("display","none");
+		   }
+	   }
+	}
+}
+	   var txt="";
+	   $("#searchTxt").live("focus",function() {
+		   txt=$(this).val();
+		  $(this).val("");
+	   });
+ 		$("#searchTxt").live("blur",function() {
+		 if($(this).val() == "") {
+			 $(this).val(txt);
+		 }
+	   });
+</script>
+<?php if($this->employee != NULL){?>
+<div class="widget">
+        <div class="whead">
+        	<h6>Employee List</h6>
+			<h6 id="msg" style="color:#54C571;"></h6>
+
+        </div>
+        <div class="hiddenpars" id="dyn">
+            <a title="Options" class="tOptions minus"></a>
+            <div role="grid" class="dataTables_wrapper" id="dynamic_wrapper">
+             <form id="empListForm" name="empListForm" method="post" action="/admin/manageemployee" onsubmit="return check()">
+	            <div class="tablePars">
+	            <div class="dataTables_filter" id="dynamic_filter">
+		            <div class="span5">
+                    <label>
+			            <span>Employee Name:</span>
+			            <input type="text" id="searchTxt" value="Type to search..." aria-controls="dynamic" onkeyup="searchEmployee(this.value)">
+			            <div class="srch"></div>
+		            </label>
+                    </div>
+                    <div class="span3 managebulk">
+		               <span>
+			             <div class="radiolist">
+							<span class="">
+			            		<input type="radio" id="bulk_radio" onclick="javascript:$(this).parent().addClass('checked');$('#default_radio').parent().removeClass('checked');$('#default_radio').removeAttr('checked');$('.defaultManage').hide();$('#tableFooter').show();$('div.checker').show();" style="opacity: 0;">
+			             	</span>
+			            </div>
+                        <span>Manage in bulk</span>
+		            </span>
+		            <span>
+
+			            <div class="radiolist">
+							<span class="checked">
+			            	<input type="radio" id="default_radio" checked="checked" onclick="javascript:$(this).parent().addClass('checked');$('#bulk_radio').parent().removeClass('checked');$('#bulk_radio').removeAttr('checked');$('div.checker').hide();$('#tableFooter').hide();$('.defaultManage').show();"  style="opacity: 0;">
+			            </span>
+			            </div>
+                         <span>Default</span>
+		            </span>
+                    </div>
+		        </div>
+	             </div>
+	             <table cellspacing="0" cellpadding="0" border="0" id="dynamic" class="dTable dataTable" aria-describedby="dynamic_info">
+                    <thead>
+			            <tr role="row">
+			            	<th class="sorting_asc">Employee Name<span style="display: block;" class="sorting"></span></th>
+				            <th class="sorting">Designation</th>
+				            <th class="sorting">Experience</th>
+				            <th class="sorting">Status</th>
+				            <th class="sorting">
+  								 <div class="checker">
+                                	 <span class="">
+                                	 <input type="checkbox" name="check[]" style="opacity:0" id="selectAll">
+                                	 </span>
+                                 </div>
+                            </th>
+				        </tr>
+		            </thead>
+		            <tbody role="alert" aria-live="polite" aria-relevant="all">
+			            <?php foreach($this->employee as $emp){?>
+			            	<tr class="gradeA" id="row_<?=$emp->getUserId();?>">
+					            <td class="span3  sorting_1"><?=$emp->getFirstName()." ".$emp->getLastName();?></td>
+					            <td class="span4 "><?= count($emp->getUserDetail())>0 ? $emp->getUserDetail()->getPosition()->getPosition() : 'Not Specified';?></td>
+					            <td class="span3 "><?=count($emp->getUserDetail())>0 ? $emp->getUserDetail()->getExpYears()." Year(s) ".$emp->getUserDetail()->getExpMonths()." Month(s)" : 'Not Specified'?></td>
+					            <td class="span1 center ">Active</td>
+					             <td class="center" style="width:80px">
+                                 <div class="checker">
+                                	 <span class="">
+                                	 <input type="checkbox" name="checkRow[]" style="opacity: 0;" value="<?=$emp->getUserId();?>" id="check_<?= $emp->getUserId();?>" class="check">
+                                	 </span>
+                                 </div>
+                                 <a class="defaultManage btn btn-primary btn-small" href="/admin/employeeactivity/userId/<?=$emp->getUserId();?>">Manage</a>
+                                 </td>
+			            	</tr>
+			            <?php }?>
+		    		</tbody>
+	    		</table>
+	    		<div class="fg-toolbar tableFooter" id="tableFooter">
+	    			<div class="right">
+		    			<input class="btn btn-primary btn-small" type="submit" name="Manage" value="Manage">
+		    		</div>
+	    		</div>
+	    	</form>
+    	</div>
+	</div>
+</div>
+<?php  echo $this->paginationControl($this->employee,'Elastic','pagination.phtml');?>
+<?php } else {?>
+<div class="profileimg col_6 fleft">
+		<p>
+				No Employees are assign to you.
+		</p>
+	</div>
+<?php } ?>

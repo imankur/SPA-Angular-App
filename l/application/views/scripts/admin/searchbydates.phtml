@@ -1,0 +1,99 @@
+<link rel="stylesheet" href="/styles/report.css" type="text/css" media="screen" title="no title" charset="utf-8">
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
+<script type="text/javascript">
+		$(document).ready(function() {
+			var load_img='<img class="loading" src="/images/loading1.gif"></img>';
+			$('select').each(function(){
+				var id=$(this).attr('id');
+				$("#"+id).select2();
+			});
+			$('#Fromdatepicker').click(function (e) {
+				$(this).datepicker("option", "dateFormat", 'yy-mm-dd').datepicker( "show" );
+			   });
+			$('#Todatepicker').click(function (e) {
+				$(this).datepicker("option", "dateFormat", 'yy-mm-dd').datepicker( "show" );
+			   });
+			$('#search').click(function (e){
+				if($('#employee').val()=='0'){
+					alert(" Please select employee ");
+					return false;
+				}
+				if($('#Fromdatepicker').val()==''){
+					alert(" Please select 'From' date ");
+					return false;
+				}
+				if($('#Todatepicker').val()==''){
+					alert(" Please select 'To' date ");
+					return false;
+				}
+				$("#content").html(load_img);
+				$('#export').prop('disabled',true);
+				$.ajax({
+					type:'POST',
+					url:'/admin/reportsearch',
+					data:"format=json&employeeId="+$.toJSON($('#employee').val())+"&fromdate="+$.toJSON($('#Fromdatepicker').val())+"&todate="+$.toJSON($('#Todatepicker').val()),
+					success:function(res,stat){
+						$("#content").html(res);
+						$('#export').prop('disabled',false);
+						},
+					});
+
+				});
+			$("#Fromdatepicker").datepicker({
+				  onSelect: function(dateText) {
+					  var x= new Date($(this).val());
+					  if((x - new Date()) > 0){
+							alert("Please Do Not Select Future Date");
+							$(this).val("");
+					  }
+				  }
+				});
+			$("#Todatepicker").datepicker({
+				  onSelect: function(dateText) {
+					  var x= new Date($(this).val());
+					  if((x - new Date()) > 0){
+							alert("Please Do Not Select Future Date");
+							$(this).val("");
+					  }
+					var fromdate= new Date($("#Fromdatepicker").val());
+					if((x - fromdate) < 0){
+						alert("TO date must be ahead of FROM date");
+						$(this).val("");
+					}
+				  }
+				});
+
+			$('#export').click(function() {
+					window.location.href='/admin/getcsvfile?employee='+$("#employee").val()+'&fromdate='+$("#Fromdatepicker").val()+'&todate='+$("#Todatepicker").val();
+			});
+		});
+	</script>
+<div class=" show-grid whpanel-bordered">
+	<h4 class="headerTitle exportHeading">
+	<button id="export" class="btn  pull-right" type="button" disabled="disabled">Export</button>
+	</h4>
+	<br/>
+	<label class="radio inline">
+		From :
+	</label>
+	<input type="text" id="Fromdatepicker"  class="span2" />
+	<label class="radio inline">
+		To :
+	</label>
+	<input type="text" id="Todatepicker" class="span2" />
+	<label for='name' class="radio inline">
+		Employee :
+	</label>
+	<span class="employeeDropdown radio inline">
+	<select id="employee" class="span3">
+		<option value="0">Select Employee</option>
+		<option value="all">All</option>
+		<?php foreach($this->users AS $user){
+					echo "<option value=". $user->getRedbr() .">".$user->getName()."</option>";
+				}
+		?>
+	</select>
+	</span>
+	<button id="search" class="btn " type="button" >Search</button>
+</div>
+<div id="content" class="content-main"></div>

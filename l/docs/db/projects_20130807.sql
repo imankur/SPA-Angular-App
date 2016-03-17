@@ -1,0 +1,1 @@
+INSERT INTO `resource_management`.`projects`(`project_id`,`project_name`) VALUES ( NULL,'Genavix'); 
